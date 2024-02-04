@@ -1,0 +1,28 @@
+- Steps to debug
+	- F9 -> Break Point
+	- Set the Mode to Debug (Next to x86)
+	- Run the Local windows Debugger
+
+- Debugger
+	- Yellow arrows shows which line is currently in execution.
+	- Continue -> Continue our execution of the program
+
+- Modes
+	- Step Into -> F11 -> Step into a function on the current line
+	- Step Over -> F10 -> Moves on to the next line of code but not going to execute the next line.
+	- Step Out -> Shift + F11 -> Moves out the current function the line is getting executed in.
+	- Example :
+		int main()
+		{
+			Log("hello"); -> If our Break point is set here
+			std::cout<<"a"<<std::endl;
+		}
+		
+		- When we press step into -> Yellow arrow moves into the Log function declaration and execute the lines of code in the Log function.
+		- When we press step Over -> Yellow arrow moves to the next line of code (i.e. std::cout<<"a"<<std::endl)		
+		- When we press step Out -> Yellow arrows moves out the function -> Moves out of the int main()
+
+- Disassembly mode -> Right click when in debug mode
+
+- Memory View -> Top menu -> Debug -> Windows -> Memory -> Memory 1
+	- To Check a variable in the memory just type in Address : &variablename

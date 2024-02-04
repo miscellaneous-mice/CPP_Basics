@@ -1,0 +1,7 @@
+Arthematic_Print : Use Arthematic.cpp and Print.cpp
+
+Math_Log : Using Log.cpp and Math.cpp
+
+best_method : You are using best method of linking a function in header into 2 different files (i.e. Print.cpp and Arthematic.cpp)
+
+Using_Header : You are using Header_file hence disable the items
