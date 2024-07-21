@@ -1,7 +1,0 @@
-﻿  Log.cpp
-  Main.cpp
-D:\Udemy\C++\8_Loops\8_Loops\Main.cpp(32,9): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Udemy\C++\8_Loops\8_Loops\Main.cpp(39,11): warning C4305: '+=': truncation from 'double' to 'float'
-D:\Udemy\C++\8_Loops\8_Loops\Main.cpp(47,11): warning C4305: '+=': truncation from 'double' to 'float'
-  Generating Code...
-  8_Loops.vcxproj -> D:\Udemy\C++\8_Loops\x64\Debug\8_Loops.exe
