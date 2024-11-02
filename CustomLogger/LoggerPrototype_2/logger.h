@@ -4,7 +4,7 @@
 #include "utils.h"
 
 template <typename T>
-T* castHandler(void* handler);
+T* castHandler(void* handler, std::string cast_type);
 
 class Logger : public BaseUtils, protected Handlers {
 private:

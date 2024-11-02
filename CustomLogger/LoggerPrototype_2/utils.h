@@ -9,6 +9,7 @@
 #include <map> // Hashmaps
 #include <variant>
 #include <any>
+#include <typeinfo>
 
 #define FILE "file"
 #define CONSOLE "console"
