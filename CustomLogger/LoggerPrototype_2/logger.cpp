@@ -51,22 +51,18 @@ void LoggerHelper::setFormatter(BaseUtils* handler, const std::string& format) {
     }
 }
 
-std::string Logger::PrepareLog(BaseUtils* handler, std::string message) {
+std::string Logger::PrepareLog(BaseUtils* handler, Level level, std::string message) {
     std::string format;
     const char* dateformat;
-    Level level;
 
     if (auto file = castHandler<FileUtils>(handler)) {
         format = file->format;
-        level = LoggerHelper::getLevel(file);
         dateformat = file->dateformat;
     } else if (auto console = castHandler<ConsoleUtils>(handler)){
         format = console->format;
-        level = LoggerHelper::getLevel(console);
         dateformat = console->dateformat;
     } else if (auto basic = castHandler<BaseUtils>(handler)) {
         format = basic->format;
-        level = LoggerHelper::getLevel(basic);
         dateformat = basic->dateformat;
     }
     std::string result;
@@ -79,14 +75,12 @@ std::string Logger::PrepareLog(BaseUtils* handler, std::string message) {
     std::string target3 = "message";
 
     result = format;
-    // result = target1 + "||" + target2 + "||" + target3;
-    // Replace "name" with "LOGGER"
+
     size_t pos = result.find(target1);
     if (pos != std::string::npos) {
         result.replace(pos, target1.length(), now);
     }
 
-    // Replace "date" with "17-06-2024"
     pos = result.find(target2);
     if (pos != std::string::npos) {
         switch(level) {
@@ -105,7 +99,6 @@ std::string Logger::PrepareLog(BaseUtils* handler, std::string message) {
         }
     }
 
-    // Replace "level" with "INFO"
     pos = result.find(target3);
     if (pos != std::string::npos) {
         result.replace(pos, target3.length(), message);
@@ -151,7 +144,6 @@ void Logger::addHandler(BaseUtils* handler){
 
 void Logger::GetInfo() {
     for (const auto& pair : this->handlers){
-        // const std::type_info& type = pair.second.type();
         if (auto entity = this->get_element<FileUtils>(pair.first)) {
             entity->GetInfo();
         } else if (auto entity = this->get_element<ConsoleUtils>(pair.first)){
@@ -174,13 +166,13 @@ void Logger::info(const std::string& message){
     }
     for (const auto& pair: handlers) {
         if(const auto& handler = this->get_element<FileUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelInfo, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelInfo){
                 handler->Writer(formatted_text.c_str());
             }
         }
         else if(const auto& handler = this->get_element<ConsoleUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelInfo, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelInfo){
                 handler->SetColor(GREEN);
                 std::cout<<formatted_text<<std::endl;
@@ -188,7 +180,7 @@ void Logger::info(const std::string& message){
             }
         }
         else if(const auto& handler = this->get_element<BaseUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelInfo, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelInfo){
                 handler->LogConsole(formatted_text);
                 consoleWrite = false;
@@ -196,7 +188,7 @@ void Logger::info(const std::string& message){
         }
     }
     if (consoleWrite and m_Level >= LogLevelInfo) {
-        formatted_text = Logger::PrepareLog(basicLogger, message);
+        formatted_text = Logger::PrepareLog(basicLogger, LogLevelInfo, message);
         basicLogger->LogConsole(formatted_text);
     }
     this->remove_element(BASE);
@@ -214,13 +206,13 @@ void Logger::warning(const std::string& message){
     }
     for (const auto& pair: handlers) {
         if(const auto& handler = this->get_element<FileUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelWarning, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelWarning){
                 handler->Writer(formatted_text.c_str());
             }
         }
         else if(const auto& handler = this->get_element<ConsoleUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelWarning, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelWarning){
                 handler->SetColor(YELLOW);
                 std::cout<<formatted_text<<std::endl;
@@ -228,7 +220,7 @@ void Logger::warning(const std::string& message){
             }
         }
         else if(const auto& handler = this->get_element<BaseUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelWarning, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelWarning){
                 handler->LogConsole(formatted_text);
                 consoleWrite = false;
@@ -236,7 +228,7 @@ void Logger::warning(const std::string& message){
         }
     }
     if (consoleWrite and m_Level >= LogLevelWarning) {
-        formatted_text = Logger::PrepareLog(basicLogger, message);
+        formatted_text = Logger::PrepareLog(basicLogger, LogLevelWarning, message);
         basicLogger->LogConsole(formatted_text);
     }
     this->remove_element(BASE);
@@ -254,13 +246,13 @@ void Logger::error(const std::string& message){
     }
     for (const auto& pair: handlers) {
         if(const auto& handler = this->get_element<FileUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelError, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelError){
                 handler->Writer(formatted_text.c_str());
             }
         }
         else if(const auto& handler = this->get_element<ConsoleUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelError, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelError){
                 handler->SetColor(RED);
                 std::cout<<formatted_text<<std::endl;
@@ -268,7 +260,7 @@ void Logger::error(const std::string& message){
             }
         }
         else if(const auto& handler = this->get_element<BaseUtils>(pair.first)){
-            formatted_text = Logger::PrepareLog(handler, message);
+            formatted_text = Logger::PrepareLog(handler, LogLevelError, message);
             if (LoggerHelper::getLevel(handler) >= LogLevelError){
                 handler->LogConsole(formatted_text);
                 consoleWrite = false;
@@ -276,7 +268,7 @@ void Logger::error(const std::string& message){
         }
     }
     if (consoleWrite and m_Level >= LogLevelError) {
-        formatted_text = Logger::PrepareLog(basicLogger, message);
+        formatted_text = Logger::PrepareLog(basicLogger, LogLevelError, message);
         basicLogger->LogConsole(formatted_text);
     }
     this->remove_element(BASE);
