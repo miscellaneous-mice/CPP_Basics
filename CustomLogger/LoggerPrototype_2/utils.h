@@ -66,7 +66,7 @@ public:
     ConsoleUtils() : color(GREEN),  m_Level(LogLevelInfo) {};
     void SetColor(Colors color);
     void GetInfo() override;
-    ~ConsoleUtils() = default;
+    ~ConsoleUtils();
 };
 
 class FileUtils : virtual public BaseUtils{

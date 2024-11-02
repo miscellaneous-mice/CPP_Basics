@@ -72,6 +72,10 @@ void ConsoleUtils::SetColor(Colors color){
     std::cout << "\033[" << color << "m";
 }
 
+ConsoleUtils::~ConsoleUtils(){
+    std::cout << "\033[0m";
+}
+
 void ConsoleUtils::GetInfo() {
     std::cout<<"This is a console handler"<<std::endl;
     switch(m_Level){
