@@ -144,7 +144,7 @@ FileUtils::FileUtils(const std::string& filename) : filename(filename) {
     }
 
     // Build the file path
-    std::string file = logDirectory + "/" + filename + ".log";
+    std::string file = logDirectory + "/" + filename + "_" + getCurrentDateTime("%d%m%Y-%H%M%S") + ".log";
     std::cout << "File at: " << file << std::endl;
 
     // Open the file in append mode
