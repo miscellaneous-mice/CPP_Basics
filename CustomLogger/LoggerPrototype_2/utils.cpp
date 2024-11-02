@@ -25,9 +25,10 @@ T* Handlers::get_element(const std::string& key) {
         return nullptr;
     }
     try {
-        return dynamic_cast<T*>(std::any_cast<BaseUtils*>(this->handlers[key]));  // Retrieve the value and cast it
+        // return dynamic_cast<T*>(std::any_cast<BaseUtils*>(this->handlers[key])); 
+        return std::any_cast<T*>(this->handlers[key]);
     } catch (const std::bad_any_cast& e) {
-        std::cerr << "Bad cast: " << e.what() << std::endl;
+        // std::cerr << "Bad cast: " << e.what() << std::endl;
         return nullptr;
     }
 }
