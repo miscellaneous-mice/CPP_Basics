@@ -47,6 +47,21 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "iterator": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "iomanip": "cpp",
+        "fstream": "cpp",
+        "__hash_table": "cpp",
+        "__node_handle": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "array": "cpp",
+        "map": "cpp",
+        "optional": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "csignal": "cpp",
+        "unordered_set": "cpp"
     }
 }

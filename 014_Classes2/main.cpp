@@ -35,17 +35,17 @@ public:
 	}
 
 	void Error(const char* message) {
-		if (LogLevelError >= m_level)
+		if (LogLevelError <= m_level)
 			std::cout << message << std::endl;
 	}
 
 	void Warn(const char* message) {
-		if (LogLevelWarning >= m_level)
+		if (LogLevelWarning <= m_level)
 			std::cout << message << std::endl;
 	}
 
 	void Info(const char* message) {
-		if (LogLevelInfo >= m_level)
+		if (LogLevelInfo <= m_level)
 			std::cout << message << std::endl;
 	}
 };
