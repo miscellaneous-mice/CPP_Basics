@@ -1,15 +1,15 @@
 #include "handler.h"
 
-template A* castHandler<A>(void*);
-template B* castHandler<B>(void*);
-template Base* castHandler<Base>(void*);
+template A* castHandler<A>(Base*);
+template B* castHandler<B>(Base*);
+template Base* castHandler<Base>(Base*);
 
 template <typename T>
-T* castHandler(void* handler){
-    return dynamic_cast<T*>(static_cast<Base*>(handler));
+T* castHandler(Base* handler){
+    return dynamic_cast<T*>(handler);
 }
 
-void Accessor::GetInfo(void* handler){
+void Accessor::GetInfo(Base* handler){
     if (auto a = castHandler<A>(handler)) {
         a->info();
     } else if (auto b = castHandler<B>(handler)){
@@ -29,7 +29,7 @@ void Accessor::GetMapInfo(std::string key){
     }
 }
 
-void Accessor::addElement(void* handler){
+void Accessor::addElement(Base* handler){
     if (auto a = castHandler<A>(handler)) {
         this->add_element(cls_a, a);
         std::cout<<"Added A"<<std::endl;

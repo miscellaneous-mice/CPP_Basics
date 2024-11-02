@@ -1,42 +1,36 @@
 #include "logger.h"
 
-template FileUtils* castHandler<FileUtils>(void*, std::string);
-template ConsoleUtils* castHandler<ConsoleUtils>(void*, std::string);
-template BaseUtils* castHandler<BaseUtils>(void*, std::string);
-template Logger* castHandler<Logger>(void*, std::string);
+template FileUtils* castHandler<FileUtils>(BaseUtils*);
+template ConsoleUtils* castHandler<ConsoleUtils>(BaseUtils*);
+template BaseUtils* castHandler<BaseUtils>(BaseUtils*);
+template Logger* castHandler<Logger>(BaseUtils*);
 
 template <typename T>
-T* castHandler(void* handler, std::string cast_type){
-    if (cast_type == "dynamic") {
-        return dynamic_cast<T*>(static_cast<BaseUtils*>(handler));
-    } else if (cast_type == "static") {
-        return static_cast<T*>(handler);
-    } else {
-        return nullptr;
-    }
+T* castHandler(BaseUtils* handler){
+    return dynamic_cast<T*>(handler);
 }
 
-Configs::Level LoggerHelper::getLevel(void* handler){
-    if (auto file = castHandler<FileUtils>(handler, "static")) {
+Configs::Level LoggerHelper::getLevel(BaseUtils* handler){
+    if (auto file = castHandler<FileUtils>(handler)) {
         return file->m_Level;
-    } else if (auto console = castHandler<ConsoleUtils>(handler, "static")){
+    } else if (auto console = castHandler<ConsoleUtils>(handler)) {
         return console->m_Level;
-    } else if (auto basic = castHandler<BaseUtils>(handler, "static")){
-        return basic->m_Level;
-    } else if (auto logger = castHandler<Logger>(handler, "static")){
+    } else if (auto logger = castHandler<Logger>(handler)) {
         return logger->m_Level;
+    } else if (auto basic = castHandler<BaseUtils>(handler)) {
+        return basic->m_Level;
     }
     return Configs::LogLevelDefault;
 }
 
-void LoggerHelper::setLevel(void* handler, Configs::Level level){
-    if (auto file = castHandler<FileUtils>(handler, "dynamic")) {
+void LoggerHelper::setLevel(BaseUtils* handler, Configs::Level level){
+    if (auto file = castHandler<FileUtils>(handler)) {
         file->m_Level = level;
-    } else if (auto console = castHandler<ConsoleUtils>(handler, "dynamic")){
+    } else if (auto console = castHandler<ConsoleUtils>(handler)){
         console->m_Level = level;
-    } else if (auto logger = castHandler<Logger>(handler, "dynamic")){
+    } else if (auto logger = castHandler<Logger>(handler)){
         logger->m_Level = level;
-    } else if (auto basic = castHandler<BaseUtils>(handler, "dynamic")){
+    } else if (auto basic = castHandler<BaseUtils>(handler)){
         basic->m_Level = level;
     }
 }
@@ -45,36 +39,35 @@ const std::string LoggerHelper::getLoggerName(const Logger* logger) {
     return logger->logger_name;
 }
 
-void LoggerHelper::setFormatter(void* handler, const std::string& format) {
-    if (auto file = castHandler<FileUtils>(handler, "static")) {
+void LoggerHelper::setFormatter(BaseUtils* handler, const std::string& format) {
+    if (auto file = castHandler<FileUtils>(handler)) {
         file->format = format;
-    } else if (auto console = castHandler<ConsoleUtils>(handler, "static")){
+    } else if (auto console = castHandler<ConsoleUtils>(handler)) {
         console->format = format;
-    } else if (auto basic = castHandler<BaseUtils>(handler, "static")){
+    } else if (auto logger = castHandler<Logger>(handler)) {
+        logger->format = format;
+    } else if (auto basic = castHandler<BaseUtils>(handler)) {
         basic->format = format;
     }
 }
 
-std::string Logger::PrepareLog(void* handler, std::string message) {
+std::string Logger::PrepareLog(BaseUtils* handler, std::string message) {
     std::string format;
     const char* dateformat;
     Level level;
 
-    if (typeid(*static_cast<FileUtils*>(handler)) == typeid(FileUtils)) {
-        FileUtils* Utils = static_cast<FileUtils*>(handler);
-        format = Utils->format;
-        level = LoggerHelper::getLevel(Utils);
-        dateformat = Utils->dateformat;
-    } else if (typeid(*static_cast<ConsoleUtils*>(handler)) == typeid(ConsoleUtils)){
-        ConsoleUtils* Utils = static_cast<ConsoleUtils*>(handler);
-        format = Utils->format;
-        level = LoggerHelper::getLevel(Utils);
-        dateformat = Utils->dateformat;
-    } else if (typeid(*static_cast<BaseUtils*>(handler)) == typeid(BaseUtils)) {
-        BaseUtils* Utils = static_cast<BaseUtils*>(handler);
-        format = Utils->format;
-        level = LoggerHelper::getLevel(Utils);
-        dateformat = Utils->dateformat;
+    if (auto file = castHandler<FileUtils>(handler)) {
+        format = file->format;
+        level = LoggerHelper::getLevel(file);
+        dateformat = file->dateformat;
+    } else if (auto console = castHandler<ConsoleUtils>(handler)){
+        format = console->format;
+        level = LoggerHelper::getLevel(console);
+        dateformat = console->dateformat;
+    } else if (auto basic = castHandler<BaseUtils>(handler)) {
+        format = basic->format;
+        level = LoggerHelper::getLevel(basic);
+        dateformat = basic->dateformat;
     }
     std::string result;
     std::transform(format.begin(), format.end(), result.begin(), [](unsigned char c) {
@@ -136,18 +129,18 @@ BaseUtils* Logger::FileHandler(Level loglevel, const char* datefmt, std::string 
     return fileutils;
 }
 
-void Logger::addHandler(void* handler){
+void Logger::addHandler(BaseUtils* handler){
     bool status = false;
     std::string handler_name;
-    if (auto file = castHandler<FileUtils>(handler, "dynamic")) {
+    if (auto file = castHandler<FileUtils>(handler)) {
         status = this->add_element(FILE, file);
         // file->GetInfo();
         handler_name = "file handler";
-    } else if (auto console = castHandler<ConsoleUtils>(handler, "dynamic")){
+    } else if (auto console = castHandler<ConsoleUtils>(handler)){
         status = this->add_element(CONSOLE, console);
         // console->GetInfo();
         handler_name = "console handler";
-    } else if (auto base = castHandler<BaseUtils>(handler, "dynamic")){
+    } else if (auto base = castHandler<BaseUtils>(handler)){
         status = this->add_element(BASE, base);
         // base->GetInfo();
         handler_name = "base handler";
@@ -175,6 +168,7 @@ void Logger::info(const std::string& message){
     std::string formatted_text;
     BaseUtils* basicLogger = new BaseUtils();
     LoggerHelper::setLevel(basicLogger, m_Level);
+    LoggerHelper::setFormatter(basicLogger, format);
     if (this->handlers.size() == 0) {
         this->add_element(BASE, basicLogger);
     }
@@ -214,6 +208,7 @@ void Logger::warning(const std::string& message){
     std::string formatted_text;
     BaseUtils* basicLogger = new BaseUtils();
     LoggerHelper::setLevel(basicLogger, m_Level);
+    LoggerHelper::setFormatter(basicLogger, format);
     if (this->handlers.size() == 0) {
         this->add_element(BASE, basicLogger);
     }
@@ -253,6 +248,7 @@ void Logger::error(const std::string& message){
     std::string formatted_text;
     BaseUtils* basicLogger = new BaseUtils();
     LoggerHelper::setLevel(basicLogger, m_Level);
+    LoggerHelper::setFormatter(basicLogger, format);
     if (this->handlers.size() == 0) {
         this->add_element(BASE, basicLogger);
     }

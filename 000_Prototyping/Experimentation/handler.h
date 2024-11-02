@@ -3,12 +3,12 @@
 #include "entities.h"
 
 template <typename T>
-T* castHandler(void* handler);
+T* castHandler(Base* handler);
 
 class Accessor : protected HashMap {
 public:
-    void GetInfo(void* handler);
+    void GetInfo(Base* handler);
     void GetMapInfo(std::string key);
-    void addElement(void* handler);
+    void addElement(Base* handler);
     void AllElements();
 };

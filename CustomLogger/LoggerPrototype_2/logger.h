@@ -4,7 +4,7 @@
 #include "utils.h"
 
 template <typename T>
-T* castHandler(void* handler, std::string cast_type);
+T* castHandler(BaseUtils* handler);
 
 class Logger : public BaseUtils, protected Handlers {
 private:
@@ -13,8 +13,8 @@ private:
     friend struct LoggerHelper;
 public:
     Logger(const std::string& filename) : logger_name(filename), m_Level(LogLevelDefault) {};
-    void addHandler(void* handler);
-    static std::string PrepareLog(void* Handler, std::string message);
+    void addHandler(BaseUtils* handler);
+    static std::string PrepareLog(BaseUtils* Handler, std::string message);
     void GetInfo() override;
     BaseUtils* StreamHandler(Level loglevel,const char* datefmt, std::string formatter="date::level::message");
     BaseUtils* FileHandler(Level loglevel, const char* datefmt, std::string formatter="date::level::message");
@@ -29,10 +29,10 @@ struct LoggerHelper {
 private:
     LoggerHelper() = default;
 public:
-    static Configs::Level getLevel(void* handler);
-    static void setLevel(void* handler, Configs::Level level);
+    static Configs::Level getLevel(BaseUtils* handler);
+    static void setLevel(BaseUtils* handler, Configs::Level level);
     static const std::string getLoggerName(const Logger* logger);
-    static void setFormatter(void* handler, const std::string& format);
+    static void setFormatter(BaseUtils* handler, const std::string& format);
 };
 
 #endif
