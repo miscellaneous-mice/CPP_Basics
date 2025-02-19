@@ -5,9 +5,9 @@ template bool Handlers::add_element(const std::string&, std::shared_ptr<ConsoleU
 template bool Handlers::add_element(const std::string&, std::shared_ptr<BaseUtils>);
 
 
-template std::shared_ptr<FileUtils> Handlers::get_element<FileUtils>(const std::string&);
-template std::shared_ptr<ConsoleUtils> Handlers::get_element<ConsoleUtils>(const std::string&);
-template std::shared_ptr<BaseUtils> Handlers::get_element<BaseUtils>(const std::string&);
+template std::shared_ptr<FileUtils> Handlers::get_element<FileUtils>(const std::string&) const;
+template std::shared_ptr<ConsoleUtils> Handlers::get_element<ConsoleUtils>(const std::string&) const;
+template std::shared_ptr<BaseUtils> Handlers::get_element<BaseUtils>(const std::string&) const;
 
 template<typename T>
 bool Handlers::add_element(const std::string& key, std::shared_ptr<T> value) {
@@ -19,7 +19,7 @@ bool Handlers::add_element(const std::string& key, std::shared_ptr<T> value) {
 }
 
 template<typename T>
-std::shared_ptr<T> Handlers::get_element(const std::string& key) {
+std::shared_ptr<T> Handlers::get_element(const std::string& key) const {
     if (handlers.find(key) == handlers.end()) {
         std::cerr<<"The handler does not exist"<<std::endl;
         return nullptr;
@@ -73,7 +73,7 @@ ConsoleUtils::~ConsoleUtils(){
     std::cout<<"Reset the console"<<std::endl;
 }
 
-void ConsoleUtils::GetInfo() {
+void ConsoleUtils::GetInfo() const {
     std::cout<<"This is a console handler"<<std::endl;
     switch(m_Level){
         case LogLevelDefault :
@@ -91,7 +91,7 @@ void ConsoleUtils::GetInfo() {
     }
 }
 
-void BaseUtils::GetInfo(){
+void BaseUtils::GetInfo() const {
     std::cout<<"This is the basic handler"<<std::endl;
     switch(m_Level) {
         case LogLevelDefault :
@@ -155,7 +155,7 @@ FileUtils::FileUtils(const std::string& filename) : filename(filename) {
     }
 }
 
-void FileUtils::GetInfo() {
+void FileUtils::GetInfo() const {
     std::cout<<"This is a file handler"<<std::endl;
     switch(m_Level){
         case LogLevelDefault :

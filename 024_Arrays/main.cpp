@@ -19,6 +19,18 @@ std::string any_to_string(const std::any& a) {
     }
 }
 
+template<typename T, const std::size_t N>
+struct array {
+    T __no_fixed_name__[N];
+
+    T* begin() { return __no_fixed_name__; }
+
+    T* end() { return __no_fixed_name__ + N; }
+
+    const T* begin() const { return __no_fixed_name__; }
+    const T* end() const { return __no_fixed_name__ + N; }
+};
+
 static std::map<std::type_index, std::tuple<std::string, std::type_index> (*)(const std::any& a)> data = {
     {std::type_index(typeid(int)), [](const std::any& a) -> std::tuple<std::string, std::type_index> { return std::make_tuple(cast(a, int), std::type_index(typeid(int))); }},
     {std::type_index(typeid(float)), [](const std::any& a) -> std::tuple<std::string, std::type_index> { return std::make_tuple(cast(a, float), std::type_index(typeid(float))); }},
@@ -30,11 +42,15 @@ static std::map<std::type_index, std::tuple<std::string, std::type_index> (*)(co
 
 int main() {
     std::array<std::any, 6> vec = {'a', 1, "chy", 2.05f, 5.000034, 5L};
-
-    // // Output the results
     for (const auto& element : vec) {
         auto [value, type_id] = data[element.type()](element);
         std::cout <<"The type is : "<< type_id.name()<< " the value is : " << value << std::endl;
+    }
+
+    array<std::any, 6> manual_vec = {'a', 1, "chy", 2.05f, 5.000034, 5L};
+    for (const auto& element: manual_vec) {
+        auto [value, type_id] = data[element.type()](element);
+        std::cout <<"The type is : "<< type_id.name()<< " the value is : " << value << std::endl;        
     }
     return 0;
 }

@@ -15,9 +15,9 @@ public:
     Logger(const std::string& filename) : logger_name(filename), m_Level(LogLevelDefault) {};
     void addHandler(std::shared_ptr<BaseUtils> handler);
     static std::string PrepareLog(std::shared_ptr<BaseUtils> Handler, Level level, std::string message);
-    void GetInfo() override;
-    std::shared_ptr<BaseUtils> StreamHandler(Level loglevel,const char* datefmt, std::string formatter="date::level::message");
-    std::shared_ptr<BaseUtils> FileHandler(Level loglevel, const char* datefmt, std::string formatter="date::level::message");
+    void GetInfo() const override;
+    std::shared_ptr<BaseUtils> StreamHandler(Level loglevel,const char* datefmt, std::string formatter="date::level::message") const;
+    std::shared_ptr<BaseUtils> FileHandler(Level loglevel, const char* datefmt, std::string formatter="date::level::message") const;
 
     void info(const std::string& message);
     void warning(const std::string& message);

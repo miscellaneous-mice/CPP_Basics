@@ -80,11 +80,11 @@ void* Access::AddEntity(void* entity, const std::type_info& type, Config::Level 
 
 void Access::Elements() {
     for (const auto& pair : Entities) {
-        // if (typeid(*static_cast<A*>(pair.second)) == typeid(A)) {
-        //     static_cast<A*>(pair.second)->Info();
-        // } else if (typeid(*static_cast<B*>(pair.second)) == typeid(B)) {
-        //     static_cast<B*>(pair.second)->Info();
-        // }
+        if (typeid(*static_cast<A*>(pair.second)) == typeid(A)) {
+            static_cast<A*>(pair.second)->Info();
+        } else if (typeid(*static_cast<B*>(pair.second)) == typeid(B)) {
+            static_cast<B*>(pair.second)->Info();
+        }
         if (auto value = static_cast<A*>(pair.second)) {
             value->Info();
         } else if (auto value = static_cast<B*>(pair.second)) {

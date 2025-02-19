@@ -39,7 +39,7 @@ protected:
     bool add_element(const std::string& key, std::shared_ptr<T> value);
 
     template<typename T>
-    std::shared_ptr<T> get_element(const std::string& key);
+    std::shared_ptr<T> get_element(const std::string& key) const;
 
     bool remove_element(const std::string& key);
 
@@ -53,7 +53,7 @@ private:
 public:
     BaseUtils() = default;
     static void LogConsole(const std::string& message);
-    virtual void GetInfo();
+    virtual void GetInfo() const;
     virtual ~BaseUtils() = default;
 };
 
@@ -66,7 +66,7 @@ public:
     ConsoleUtils() : color(GREEN),  m_Level(LogLevelInfo) {};
     void SetColor(Colors color);
     static void ResetColor();
-    void GetInfo() override;
+    void GetInfo() const override;
     ~ConsoleUtils();
 };
 
@@ -80,7 +80,7 @@ private:
 
 public:
     FileUtils(const std::string& filename);
-    void GetInfo() override;
+    void GetInfo() const override;
     std::string Reader();
     bool Writer(const char* message);
     ~FileUtils();

@@ -106,7 +106,7 @@ std::string Logger::PrepareLog(std::shared_ptr<BaseUtils> handler, Level level, 
     return result;
 }
 
-std::shared_ptr<BaseUtils> Logger::StreamHandler(Level loglevel, const char* datefmt, std::string formatter){
+std::shared_ptr<BaseUtils> Logger::StreamHandler(Level loglevel, const char* datefmt, std::string formatter) const {
     std::shared_ptr<BaseUtils> consoleutils = std::make_shared<ConsoleUtils>();
     LoggerHelper::setLevel(consoleutils, loglevel);
     consoleutils->dateformat = datefmt;
@@ -114,7 +114,7 @@ std::shared_ptr<BaseUtils> Logger::StreamHandler(Level loglevel, const char* dat
     return consoleutils;
 }
 
-std::shared_ptr<BaseUtils> Logger::FileHandler(Level loglevel, const char* datefmt, std::string formatter) {
+std::shared_ptr<BaseUtils> Logger::FileHandler(Level loglevel, const char* datefmt, std::string formatter) const {
     std::shared_ptr<BaseUtils> fileutils = std::make_shared<FileUtils>(logger_name);
     LoggerHelper::setLevel(fileutils, loglevel);
     fileutils->dateformat = datefmt;
@@ -142,7 +142,7 @@ void Logger::addHandler(std::shared_ptr<BaseUtils> handler){
     std::cout<<result<<std::endl;
 }
 
-void Logger::GetInfo() {
+void Logger::GetInfo() const {
     for (const auto& pair : this->handlers){
         if (auto entity = this->get_element<FileUtils>(pair.first)) {
             entity->GetInfo();
@@ -155,7 +155,7 @@ void Logger::GetInfo() {
 }
 
 
-void Logger::info(const std::string& message){
+void Logger::info(const std::string& message) {
     bool consoleWrite = true;
     std::string formatted_text;
     std::shared_ptr<BaseUtils> basicLogger = std::make_shared<BaseUtils>();
@@ -195,7 +195,7 @@ void Logger::info(const std::string& message){
     this->remove_element(BASE);
 }
 
-void Logger::warning(const std::string& message){
+void Logger::warning(const std::string& message) {
     bool consoleWrite = true;
     std::string formatted_text;
     std::shared_ptr<BaseUtils> basicLogger = std::make_shared<BaseUtils>();
@@ -235,7 +235,7 @@ void Logger::warning(const std::string& message){
     this->remove_element(BASE);
 }
 
-void Logger::error(const std::string& message){
+void Logger::error(const std::string& message) {
     bool consoleWrite = true;
     std::string formatted_text;
     std::shared_ptr<BaseUtils> basicLogger = std::make_shared<BaseUtils>();
