@@ -60,11 +60,13 @@ public:
     }
 
     LinkedList& operator<<(const LinkedList& other) {
-        this->length += other.length;
-        std::shared_ptr<Node<T>> other_current = other.head;
-        while(other_current != nullptr) {
-            this->append(other_current->value);
-            other_current = other_current->next;
+        if (this != &other) {
+            this->length += other.length;
+            std::shared_ptr<Node<T>> other_current = other.head;
+            while(other_current != nullptr) {
+                this->append(other_current->value);
+                other_current = other_current->next;
+            }
         }
         return *this;
     }
