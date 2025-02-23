@@ -49,8 +49,8 @@ public:
         return __array__[index];
     }
 
-    template<typename U>
-    auto operator+(const iterator<U>& other) const {
+    template<typename T>
+    auto operator+(const iterator<T>& other) const {
         if (N != other.N){
             std::cerr<<"Arrays of not the same size"<<std::endl;
             throw std::exception();
@@ -133,10 +133,43 @@ void print (const T& firstArg, const Types&... args) {
 template<typename T>
 struct Number { T n; };
  
+template<typename T>
+struct Array {
+    T* array;
+    size_t N;
+    Array() : array(nullptr), N(0) {};
+    Array(std::initializer_list<T> values) : N(values.size()){
+        array = new T[N];
+        std::memcpy(array, values.begin(), N * sizeof(T));
+    }
+    Array& operator=(std::initializer_list<T> values) {
+        N = values.size();
+        delete[] array;
+        array = new T[N];
+        std::memcpy(array, values.begin(), N * sizeof(T));
+        return *this;
+    }
+    T& operator[](size_t index) const { return array[index]; };
+    const T* begin() const { return array; };
+    const T* end() const { return array + N; };
+};
+
 template<typename T, typename U>
 constexpr Number<std::common_type_t<T, U>>
     operator+(const Number<T>& lhs, const Number<U>& rhs) {
     return {lhs.n + rhs.n};
+}
+
+template<typename U, typename T>
+auto operator*(const Array<T>& lhs, const Array<U>& rhs){
+    using ResultType = typename std::common_type<T, U>::type;
+    Array<ResultType> result;
+    result.N = lhs.N;
+    result.array = new ResultType[lhs.N];
+    for (size_t i = 0; i < lhs.N; i++){
+        result[i] = static_cast<ResultType>(lhs[i]) * static_cast<ResultType>(rhs[i]);
+    }
+    return result;
 }
  
 void describe(const char* expr, const Number<int>& x) {
@@ -151,7 +184,7 @@ void describe(const char* expr, const Number<double>& x) {
 int main(){
     print (7.5, "hello", std::bitset<16>(377), 42);
     
-    ring<std::string> textring(3);
+    ring<std::string> textring(4);
 
     textring.add("One");
     textring.add("Two");
@@ -169,5 +202,13 @@ int main(){
     describe("d1 + i2", d1 + i2);
     describe("d1 + d2", d1 + d2);    
 
+    Array<int> arr1 = {1, 2, 3, 4, 5};
+    Array<float> arr2;
+    arr2 = {5.32f, 6.85f, 7.084f, 8.854f, 9.95f};
+    auto res_arr = arr1 * arr2;
+    for (auto r : res_arr) {
+        std::cout<<r<<" ";
+    }
+    std::cout<<std::endl;
     return 0;
 }

@@ -64,6 +64,11 @@
         "csignal": "cpp",
         "unordered_set": "cpp",
         "typeindex": "cpp",
-        "version": "cpp"
+        "version": "cpp",
+        "deque": "cpp",
+        "print": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "forward_list": "cpp"
     }
 }
