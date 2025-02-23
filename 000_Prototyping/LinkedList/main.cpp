@@ -69,16 +69,6 @@ public:
         return *this;
     }
 
-    LinkedList& operator<<(LinkedList&& other) {
-        this->length += other.length;
-        std::shared_ptr<Node<T>> other_current = other.head;
-        while(other_current != nullptr) {
-            this->append(other_current->value);
-            other_current = other_current->next;
-        }
-        return *this;
-    }
-
     ~LinkedList() = default;
     
     T& operator[](size_t index) const {
