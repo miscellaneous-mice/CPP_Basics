@@ -129,7 +129,9 @@ public:
     void reverse(){
         std::shared_ptr<Node<T>> current_node = this->head;
         std::shared_ptr<Node<T>> prev_node = nullptr, next_node = nullptr;
+        std::shared_ptr<Node<T>> temp_tail = this->tail;
         this->tail = this->head;
+        this->head = temp_tail;
         while (current_node != nullptr){
             next_node = current_node->next;
             current_node->next = prev_node;
