@@ -112,6 +112,19 @@ public:
         std::cerr<<"Linked List is empty"<<std::endl;
         throw std::exception();
     }
+
+    void clear() {
+        std::shared_ptr<Node<T>> current_node = this->head, next_node = nullptr;
+        while(current_node != nullptr) {
+            next_node = current_node->next;
+            current_node->next = nullptr;
+            current_node->prev = nullptr;
+            current_node = next_node;
+        }
+        this->head = nullptr;
+        this->tail = nullptr;
+        length = 0;
+    }
     
     std::string Print(bool reverse=false) const {
         std::stringstream result;
@@ -184,6 +197,11 @@ int main() {
     ll3 << ll2;
     std::cout << ll3 << std::endl;
     ll3.reverse();
+    std::cout << ll3 << std::endl;
+    ll3.clear();
+    ll3.append(1);
+    ll3.append(2);
+    ll3.append(3);
     std::cout << ll3 << std::endl;
     return 0;
 }
