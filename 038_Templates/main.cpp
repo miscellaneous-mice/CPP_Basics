@@ -126,8 +126,8 @@ void print (const T& arg) {
 
 template <typename T, typename... Types>
 void print (const T& firstArg, const Types&... args) {
-    std::cout << firstArg << std::endl; // print first argument
-    print(args...); // call print() for remaining arguments 
+    std::cout << firstArg << std::endl;
+    print(args...);
 }
 
 template<typename T>

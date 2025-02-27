@@ -1,25 +1,4 @@
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <thread>
-#include <chrono>
-#include <iostream>
-
-float A = 0.0, B = 0.0, C = 0.0; // Rotation angles for the cube
-const int width = 160, height = 44; // Width and height of the terminal window
-float zBuffer[160 * 44]; // Z-buffer for depth calculations
-char buffer[160 * 44]; // Buffer for storing ASCII characters
-int backgroundASCIICode = ' '; // ASCII character for the background
-int distanceFromCam = 100; // Distance from the camera to the cube
-float horizontalOffset = 0; // Horizontal offset for projection
-float K1 = 40; // Projection constant
-float incrementSpeed = 0.07; // Rotation speed (adjust as needed)
-
-float x, y, z; // 3D coordinates
-float ooz; // One over z (reciprocal of z)
-int xp, yp; // Screen coordinates
-int idx; // Buffer index
+#include "rotating.h"
 
 // Calculate X coordinate after projection
 float calculateX(int i, int j, int k) {
@@ -101,9 +80,4 @@ void RunCube(int delay) {
     std::this_thread::sleep_for(std::chrono::microseconds(delay)); // Sleep to control frame rate
   }
   std::cout<<"########### Done animating the cube ###########"<<std::endl;
-}
-
-int main() {
-  RunCube(8000);
-  return 0;
 }

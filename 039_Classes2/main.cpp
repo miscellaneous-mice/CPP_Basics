@@ -1,5 +1,32 @@
 #include <iostream>
 
+#include <iostream>
+
+class Base {
+public:
+    Base() = default;
+    virtual void info() {
+        std::cout<<"Base class"<<std::endl;
+    }
+};
+
+class A : virtual public Base {
+public:
+    A() = default;
+    void info() override {
+        std::cout<<"A class"<<std::endl;
+    }
+};
+
+
+class B : virtual public Base {
+public:
+    B() = default;
+    void info() override {
+        std::cout<<"B class"<<std::endl;
+    }
+};
+
 class Example {
 public:
     Example() { std::cout<<"Created Example"<<std::endl; }
@@ -77,4 +104,13 @@ int main() {
     Entity* e3 = new Entity();
     ScopedPtr s(e3);
     s->getName();
+
+    std::cout<<"\nGetting common types"<<std::endl;
+    A a;
+    a.info();
+    B b;
+    b.info();
+    using cls = typename std::common_type<A, Base>::type; // Same as using cls = typename std::common_type<B, Base>::type;
+    cls C;
+    C.info();
 }

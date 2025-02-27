@@ -24,8 +24,33 @@ extern int s_Variable;
 extern void Log(const char* message);
 #endif
 
+int& Get_static() {
+    /* static value are declared on the seperate part of the memory,
+    hence these don't get destroyed after the function ends, i.e. returns the reference to this variable */
+    static int val = 20;
+    return val;
+}
+
+int& Get_value() {
+    /* Non static values are not defined on the stack,
+    hence when function execution ends, the val variable scope lifetime ends, i.e. returns the destroyed reference to this variable */
+    int val = 20;
+    return val;
+}
+
+
 int main(){
     std::string s = std::to_string(s_Variable);
     Log(s.c_str());
+
+    Get_value() = 10;
+    std::cout<<Get_value()<<std::endl;
+
+    Get_static() = 30;
+    std::cout<<Get_static()<<std::endl;
+
+    int& ref = Get_static();
+    ref = 40;
+    std::cout<<Get_static()<<std::endl;
     return 0;
 }

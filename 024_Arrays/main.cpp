@@ -4,6 +4,7 @@
 #include <typeindex>
 #include <any>
 #include <map>
+#include<ranges>
 #include <sstream>
 
 #define cast(c, T) (any_to_string<T>(c))
@@ -48,8 +49,7 @@ int main() {
     }
 
     array<std::any, 6> manual_vec = {'a', 1, "chy", 2.05f, 5.000034, 5L};
-    for (const auto& element: manual_vec) {
-        auto [value, type_id] = data[element.type()](element);
+    for (const auto& [value, type_id]: manual_vec | std::views::transform([=](auto val) -> std::tuple<std::string, std::type_index> { return data[val.type()](val); })) {
         std::cout <<"The type is : "<< type_id.name()<< " the value is : " << value << std::endl;        
     }
     return 0;

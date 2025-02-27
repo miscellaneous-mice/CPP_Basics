@@ -127,8 +127,8 @@ int main() {
             {13, 14, 15, 16}
         }
     };
-    for (auto x: arr3d){
-        for(auto y: x) {
+    for (auto& x: arr3d){
+        for(auto& y: x) {
             for(auto z: y) {
                 std::cout<<z<<" ";
             }
