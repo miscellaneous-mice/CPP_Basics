@@ -76,6 +76,15 @@ struct Array {
     Array& operator=(const Array& other) = delete;
     ~Array() { delete[] __array__; }
 
+    template<typename newtype>
+    explicit operator Array<newtype>() const {
+        Array<newtype> new_array;
+        for (std::size_t i = 0; i < N; i++) {
+            new_array.push_back(static_cast<newtype>((*this)[i]));
+        }
+        return new_array;
+    }
+
     void setsize(size_t new_size) {
         T* __temp__ = new T[new_size];
         size_t minSize = (new_size < N) ? new_size : N;
@@ -139,6 +148,9 @@ int main() {
 
     Array<int> a = {1, 2, 3, 4, 5};
     Array<float> b = {3.324f, 8.478f, 5.347f, 2.934f, 0.348f};
-    auto sum = a + b;
-    std::cout<<sum<<std::endl;
+    Array<double> c = Array<double>(a);
+    auto res1 = a + b;
+    auto res2 = b + c;
+    std::cout<<res1<<std::endl;
+    std::cout<<res2<<std::endl;
 }

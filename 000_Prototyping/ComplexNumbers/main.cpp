@@ -6,7 +6,7 @@
 
 int main()
 {
-    using namespace std::complex_literals;
+    using namespace std::literals::complex_literals;
     std::cout << std::fixed << std::setprecision(2); // Sets the decimal precision for console output
  
     std::complex<int> z1 = 1i * 1i; // imaginary unit squared
@@ -23,11 +23,12 @@ int main()
     std::cout << "(1 + 2i) * (1 - 2i) = " << z4 * z5 << '\n';
  
     const auto zz = {0.0 + 1i, 2.0 + 3i, 4.0 + 5i};
+    std::array<std::complex<double>, 3> zz1 = {0.0 + 1i, 2.0 + 3i, 4.0 + 5i};
 
     for (double re : zz | std::views::transform([](auto z){ return z.real(); }))
         std::cout << re << ' ';
     std::cout << '\n';
-    for (double im : zz | std::views::transform([](auto z){ return z.imag(); }))
+    for (double im : zz1 | std::views::transform([](auto z){ return z.imag(); }))
         std::cout << im << ' ';
     std::cout << '\n';
 }
