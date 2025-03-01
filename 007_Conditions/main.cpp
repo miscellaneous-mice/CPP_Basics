@@ -8,7 +8,7 @@ int main()
 {
     int x = 5;
     bool ComparisonResult = (x == 6); // false
-    if (ComparisonResult) // Checking if comparison Result is anything but zero. If it is then the branch inside the if statement is executed
+    if (ComparisonResult) [[likely]] // Checking if comparison Result is anything but zero. If it is then the branch inside the if statement is executed
     {
         Log("x is 5");
     }
