@@ -78,8 +78,8 @@ int main() {
 
     const int& ref1 = 10; // This is basically just int temp = 10; const int& ref1 = temp;
     const int& ref2 = value; // This is just taking lvalue reference of an lvalue
-    SetValue(value); // We can assign lvalue reference to an lvalue
-    SetValue(10); // We can assign lvalue reference to an rvalue for const type&
+    SetValueRef(value); // We can assign lvalue reference to an lvalue
+    SetValueRef(10); // We can assign lvalue reference to an rvalue for const type&
 
     std::string str1 = "Howa"; // lvalue -> str1, rvalue -> "Howa"
     std::string str2 = "Overlay"; // lvalue -> str2, rvalue -> "Overlay"

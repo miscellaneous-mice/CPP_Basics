@@ -1,5 +1,10 @@
 #include <iostream>
-#include "rotating.h"
+#include <math.h>
+#include <thread>
+#include <chrono>
+#include <iostream>
+
+using namespace std::literals::chrono_literals;
 
 class Timer {
 public:
@@ -37,7 +42,7 @@ int main(){
     std::cout<<"Time Elapsed : "<< elapsed <<"s"<<std::endl;
 
     std::vector<std::thread> workers;
-    workers.emplace_back(std::bind(&Process, 500));
+    workers.emplace_back(&Process, 500);
     workers.emplace_back(std::bind(&Process, 1000));
 
     for (auto& worker : workers) {

@@ -3,7 +3,7 @@
 #include <cmath>
 
 int main () {
-    double PI = M_PI;
+    long double PI = M_PI;
     std::cout << std::setprecision(5) << PI << '\n';
     std::cout << std::setprecision(9) << PI << '\n';
     std::cout << std::fixed;

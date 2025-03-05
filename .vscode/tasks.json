@@ -6,6 +6,7 @@
             "command": "/usr/bin/clang++",
             "args": [
                 "-std=c++20",
+                "-stdlib=libc++",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${fileDirname}/*.cpp",

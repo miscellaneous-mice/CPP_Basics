@@ -4,9 +4,6 @@
 #include <cstring>
 
 struct SStream {
-    char* __str__;
-    size_t N;
-
     SStream() : __str__(nullptr), N(0) { std::cout<<"Default constructor"<<std::endl; }
 
     SStream(const char* string) {
@@ -49,6 +46,9 @@ struct SStream {
 
     char* begin() const { return __str__; }
     char* end() const { return __str__ + N; }
+private:
+    char* __str__;
+    size_t N;
 };
 
 std::ostream& operator<<(std::ostream& console, const SStream& str) { // Passes the SStream instance as a reference, hence doesn't get copied
@@ -64,6 +64,18 @@ std::ostream& operator<(std::ostream& console, SStream str) { // Each time a ins
     }
     return console;
 }
+
+
+class Entity {
+    public:
+        Entity(const SStream& value) : string(value) {}; // Here string(value), copy constructor is called
+        void PrintName() {
+            std::cout<<string<<std::endl;
+        }
+    private:
+        SStream string;
+    };
+    
 
 int main() {
     SStream strng = "Hola, Mucho Gusto";
@@ -88,6 +100,14 @@ int main() {
     std::cout<<std::endl;
 
     std::cout<<strng3[2]<<std::endl;
+
+    Entity e("Gretchen");
+    e.PrintName();
+
+    std::array<SStream, 5> strs = {"Joe", "Jim", "Ellen", "Victor", "Susanne"};
+    for (auto s : strs) {
+        std::cout<<s<<std::endl;
+    }
 
     // SStream strng4 = std::move(strng2); // This will cause issue as move constructor is specified as delete (i.e. disabled)
     return 0;

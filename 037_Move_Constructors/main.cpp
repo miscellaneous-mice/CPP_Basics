@@ -2,9 +2,6 @@
 #include <cstring>
 
 struct SStream {
-    char* __str__;
-    size_t N;
-
     SStream() : __str__(nullptr), N(0) { std::cout<<"Default constructor"<<std::endl; }
 
     SStream(const char* string) {
@@ -46,6 +43,34 @@ struct SStream {
 
     char* begin() const { return __str__; }
     char* end() const { return __str__ + N; }
+
+private:
+    char* __str__;
+    size_t N;
+};
+
+std::ostream& operator<<(std::ostream& stream, const SStream& string) {
+    for(auto& s : string){
+        stream<<s;
+    }
+    return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, SStream&& string) {
+    for(auto& s : string){
+        stream<<s;
+    }
+    return stream;
+}
+
+class Entity {
+public:
+    Entity(SStream&& value) : string((SStream&&)value) {}; // Same as Entity(SStream&& value) : string(std::move(value)) {};
+    void PrintName() {
+        std::cout<<string<<std::endl;
+    }
+private:
+    SStream string;
 };
 
 int main() {
@@ -74,7 +99,7 @@ int main() {
 
     SStream strng4 = "Hola, Mucho Gusto";
 
-    for (auto s : *strng) {
+    for (auto s : strng4) {
         std::cout << s << ", ";
     }
     
@@ -86,10 +111,15 @@ int main() {
     }    
 
     std::cout<<std::endl;
+
+    std::cout<<(SStream&&)strng5<<std::endl;
+    std::cout<<std::move(strng5)<<std::endl;
     
-    SStream strng6;
-    strng6 = std::move(strng5);
-    for (auto s : strng6) {
-        std::cout << s << ", ";
-    }  
+    Entity e("Viglaw");
+    e.PrintName();
+
+    std::array<SStream, 5> strs = {"Joe", "Jim", "Ellen", "Victor", "Susanne"};
+    for (auto& s : strs) {
+        std::cout<<s<<std::endl;
+    }
 }

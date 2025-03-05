@@ -158,7 +158,7 @@ int main() {
     const auto zz = {0.0 + 1.0i, 2.0 + 3.1i, 4.0 + 5.7i};
 
     for (auto [no, re, im] : zz | std::views::transform([](auto z){ return std::make_tuple(z, z.real(), z.imag()); }))
-        std::cout << no << "->" << re << "::" <<im<<'\n';
+        std::cout << no << " -> " << re << "::" <<im<<'\n';
 
     return 0;
 }
