@@ -54,13 +54,6 @@ namespace literals {
             t = std::move(other.t);
             return *this;
         }
-        
-        std::thread& get() { return t; }
-        const std::thread& get() const { return t; }
-        
-        bool joinable() const noexcept { return t.joinable(); }
-        void join() { t.join(); }
-        void detach() { t.detach(); }
     };
 };
 

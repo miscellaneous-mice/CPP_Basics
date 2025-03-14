@@ -86,6 +86,12 @@ int main()
 	size_t pos1 = str.find("o", 0);
 	size_t pos2 = str.find("o", pos1 + 1);
 	std::cout<<"The character is located at : "<<pos1<<" , "<<pos2<<std::endl;
+
+	std::cout<<"------------decltype-------------"<<std::endl;
+	int x1 = 5;
+	decltype(x1) x2 = 10;
+	std::cout<<"Type of x1 : "<<typeid(x1).name()<<", Value : "<<x1<<std::endl;
+	std::cout<<"Type of x2 : "<<typeid(x2).name()<<", Value : "<<x2<<std::endl;
 }
 
 
