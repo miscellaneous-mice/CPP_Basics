@@ -24,9 +24,9 @@ constexpr auto TotalSum(Args&&... args) {
     print(std::forward<Args>(args)...);
     using resulttype = std::common_type<std::decay_t<Args>...>::type;
     auto values = std::make_tuple(std::forward<Args>(args)...);
-    resulttype result = 0;
+    resulttype result{};
     std::apply([&result](auto&&... args) mutable {
-        ((result = result + static_cast<resulttype>(args)), ...);
+        ((result += static_cast<resulttype>(args)), ...);
     }, values);
     return result;
 }
