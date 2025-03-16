@@ -16,9 +16,6 @@ public:
 
 template<typename T>
 struct Array {
-    T* array;
-    size_t N;
-
     Array() : array(new T[0]), N(0) {};
 
     template<typename new_T>
@@ -31,6 +28,10 @@ struct Array {
 
     T& operator[](size_t index) {
         return array[index];
+    }
+
+    size_t size() {
+        return N;
     }
 
     void setsize(size_t new_size) {
@@ -55,12 +56,31 @@ struct Array {
 
     const T* begin() const { return array; }
     const T* end() const { return array + N; }
+private:
+    T* array;
+    size_t N;
 };
 
 template<typename K, typename V, template<typename> typename C = Array>
 struct hmap {
-    C<K> key;
-    C<V> value;
+    C<K> keys;
+    C<V> values;
+    V& operator[](const K& key) {
+        for (size_t i = 0; i < keys.size(); ++i) {
+            if (keys[i] == key) {
+                return values[i];
+            }
+        }
+        keys.pushback(key);
+        values.pushback(V());
+        return values[keys.size() - 1];
+    }
+
+    void Print() {
+        for (auto [k, v] : keys | std::views::transform([this](auto key) -> std::tuple<K, V> { return std::make_tuple(key, (*this)[key]); })) {
+            std::cout<<k<<" : "<<v<<std::endl;
+        }
+    }
 };
 
 void Print(const Entity& e){
@@ -89,4 +109,9 @@ int main() {
     arr2.pushback(43324);
     std::cout<<arr2<<std::endl;
     
+    hmap<const char*, int> hashmap;
+    hashmap["a"] = 1;
+    hashmap["b"] = 2;
+    std::cout<<hashmap["b"]<<std::endl;
+    hashmap.Print();
 }

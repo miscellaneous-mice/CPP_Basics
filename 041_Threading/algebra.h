@@ -1,13 +1,13 @@
+#pragma once
 namespace formulas {
-    constexpr long long factorial(int n) {
-        if (n <= 1) [[unlikely]] {
-            return n;
-        } else [[likely]] {
+    constexpr long long factorial(long long n) noexcept {
+        if (n > 1) [[likely]]
             return n * factorial(n - 1);
-        }
+        else [[unlikely]]
+            return 1;
     }
 
-    constexpr double pow(long double x, int n) {
+    constexpr double pow(long double x, long long n) {
         if (n <= 1) [[unlikely]] {
             return x;
         } else [[likely]] {

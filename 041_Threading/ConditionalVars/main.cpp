@@ -11,14 +11,14 @@ static bool ready = false;
 void print_id (int id) {
     std::unique_lock<std::mutex> lck(mtx);
     std::cout<<"Thread : "<<id<<" Waiting for Execution..."<<std::endl;
-    cv.wait(lck, [&id] {
-        std::cout<<"Thread : "<<id<<" is sleeping"<<std::endl;
-        return ready;
-    });
-    // while (!ready) {
+    // cv.wait(lck, [&id] {
     //     std::cout<<"Thread : "<<id<<" is sleeping"<<std::endl;
-    //     cv.wait(lck);
-    // }
+    //     return ready;
+    // });
+    while (!ready) {
+        std::cout<<"Thread : "<<id<<" is sleeping"<<std::endl;
+        cv.wait(lck);
+    }
     std::cout << "thread " << id << '\n';
 }
 

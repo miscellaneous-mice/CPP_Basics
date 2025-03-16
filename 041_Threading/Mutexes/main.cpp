@@ -69,7 +69,7 @@ public:
 private:
     std::vector<std::thread> threads;
     volatile double sink{};
-    std::function<void()> inc_exec = [=]() {
+    std::function<void()> inc_exec = [=] {
         std::lock_guard<std::mutex> lock(gLock);
         num_execs++;
     };
