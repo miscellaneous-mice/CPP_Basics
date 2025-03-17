@@ -9,12 +9,12 @@ auto sum2nums(T a, N b) {
 }
 
 template <typename T>
-void print (const T& arg) {
+constexpr void print (const T& arg) {
     std::cout<<arg<<std::endl;
 }
 
 template <typename T, typename... Types>
-void print (const T& firstArg, const Types&... args) {
+constexpr void print (const T& firstArg, const Types&... args) {
     std::cout << firstArg << ", ";
     print(args...);
 }

@@ -12,7 +12,7 @@ inline typename std::enable_if<I < sizeof...(Tp), void>::type Print(std::tuple<T
 
 template <typename T>
 void print (const T& arg) {
-    std::cout<<arg<<", ";
+    std::cout<<arg<<std::endl;
 }
 
 template <typename T, typename... Types>
@@ -32,6 +32,16 @@ constexpr auto TotalSum(Args&&... args) {
         ((result += static_cast<resulttype>(args)), ...);
     }, values);
     return result;
+}
+
+template<typename... Tp>
+std::ostream& operator<<(std::ostream& stream, const std::tuple<Tp...>& args) {
+    stream << "(";
+    std::apply([&stream](const auto&... elems) {
+        ((stream << elems << ", "), ...);
+    }, args);
+    stream << ")"; // Removes last ", " and closes the tuple with ")"
+    return stream;
 }
 
 int main() {
@@ -57,4 +67,8 @@ int main() {
 
     std::cout<<"\nPrint function"<<std::endl;
     Print(t);
+
+    std::cout<<"\nGeneralised Print function"<<std::endl;
+    auto std_tuple = std::make_tuple(1.45f, 3.0, 33L, "Hola");
+    std::cout << std_tuple << std::endl;
 }
