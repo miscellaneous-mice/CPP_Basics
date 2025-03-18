@@ -18,13 +18,13 @@ typename std::enable_if<std::is_floating_point<T>::value, float>::type print(T v
 // Function only enabled for floating-point numbers
 template <typename E, typename... Args>
 typename std::enable_if<std::is_same_v<E, typename std::common_type<Args...>::type>, void>::type type_check_print(Args&&... args) {
-    ((std::cout<<args<<", "), ...);
+    ((std::cout<< typeid(args).name() << " : " << args<<", "), ...);
     std::cout<<std::endl;
 }
 
 template <typename E, typename... Args>
 typename std::enable_if<std::is_convertible_v<E, std::common_type_t<Args...>>, void>::type print_everytime(Args&&... args) {
-    ((std::cout << args << ", "), ...);
+    ((std::cout<< typeid(args).name() << " : " << args<<", "), ...);
     std::cout << std::endl;
 }
 
