@@ -28,7 +28,7 @@ std::future<std::invoke_result_t<std::decay_t<Callable>, std::decay_t<Args>...>>
     );
 }
 
-std::tuple<std::string, bool> SearchStr(const std::string& File, const std::string& word) {
+[[nodiscard]] std::tuple<std::string, bool> SearchStr(const std::string& File, const std::string& word) {
     std::fstream MyFile;
     MyFile.open(File, std::ios::in);
     MyFile.clear();

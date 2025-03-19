@@ -1,13 +1,13 @@
 #pragma once
 namespace formulas {
-    constexpr long long factorial(long long n) noexcept {
+    [[nodiscard]] constexpr long long factorial(long long n) noexcept {
         if (n > 1) [[likely]]
             return n * factorial(n - 1);
         else [[unlikely]]
             return 1;
     }
 
-    constexpr double pow(long double x, long long n) {
+    [[nodiscard]] constexpr double pow(long double x, long long n) {
         if (n <= 1) [[unlikely]] {
             return x;
         } else [[likely]] {
@@ -17,15 +17,15 @@ namespace formulas {
 }
 
 namespace elements {
-    constexpr double nCr(int n, int r) {
+    [[nodiscard]] constexpr double nCr(int n, int r) {
         return (formulas::factorial(n)) / 
                (formulas::factorial(n - r) * formulas::factorial(r));
     }
 
-    constexpr double binomial(long double p, int n, int x) noexcept {
+    [[nodiscard]] constexpr double binomial(long double p, int n, int x) noexcept {
         return nCr(n, x) * formulas::pow(p, x) * formulas::pow((1 - p), (n - x));
     }
-    constexpr double cos(double x) noexcept {
+    [[nodiscard]] constexpr double cos(double x) noexcept {
         constexpr long long precision{16LL};
         double y{};
         for (auto n{0LL}; n < precision; n += 2LL) [[likely]]

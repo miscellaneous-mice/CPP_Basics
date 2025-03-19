@@ -2,7 +2,7 @@
 #include <any>
 
 template<typename T, typename N>
-auto sum2nums(T a, N b) {
+[[nodiscard]] auto sum2nums(T a, N b) {
     using resulttype = typename std::common_type<T, N>::type;
     auto result = static_cast<resulttype>(a) + static_cast<resulttype>(b);
     return result;
@@ -20,7 +20,7 @@ constexpr void print (const T& firstArg, const Types&... args) {
 }
 
 template<typename... Args>
-constexpr auto TotalSum(Args&&... args) {
+[[nodiscard]] constexpr auto TotalSum(Args&&... args) {
     print(std::forward<Args>(args)...);
     using resulttype = std::common_type<std::decay_t<Args>...>::type;
     auto values = std::make_tuple(std::forward<Args>(args)...);

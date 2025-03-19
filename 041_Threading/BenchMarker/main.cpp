@@ -72,7 +72,7 @@ public:
     }
 
     template<typename Callable>
-    std::chrono::microseconds RunBench(Callable&& bench_func) {
+    [[nodiscard]] std::chrono::microseconds RunBench(Callable&& bench_func) {
         // Warmup runs
         for (int i = 0; i < 5; ++i) {
             sink = bench_func();

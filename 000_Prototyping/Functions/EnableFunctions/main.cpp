@@ -3,14 +3,14 @@
 
 // Function only enabled for integers
 template <typename T>
-typename std::enable_if<std::is_integral<T>::value, int>::type print(T value) {
+[[nodiscard]] typename std::enable_if<std::is_integral<T>::value, int>::type print(T value) {
     std::cout << "Integer: ";
     return value;
 }
 
 // Function only enabled for floating-point numbers
 template <typename T>
-typename std::enable_if<std::is_floating_point<T>::value, float>::type print(T value) {
+[[nodiscard]] typename std::enable_if<std::is_floating_point<T>::value, float>::type print(T value) {
     std::cout << "Floating-point: ";
     return value;
 }

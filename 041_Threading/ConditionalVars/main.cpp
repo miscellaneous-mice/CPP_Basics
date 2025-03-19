@@ -1,7 +1,7 @@
-#include <iostream>           // std::cout
-#include <thread>             // std::thread
-#include <mutex>              // std::mutex, std::unique_lock
-#include <condition_variable> // std::condition_variable
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 static int num_threads = 5;
 static std::mutex mtx;

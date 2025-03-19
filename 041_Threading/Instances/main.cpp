@@ -12,12 +12,12 @@ enum class TUnit {
 
 namespace literals {
     template<typename T, typename N>
-    constexpr std::chrono::duration<double> time(T value, N multiplier) {
+    [[nodiscard]] constexpr std::chrono::duration<double> time(T value, N multiplier) {
         return std::chrono::duration<double>(static_cast<double>(value) * multiplier);
     }
 
     template<TUnit Unit>
-    constexpr std::chrono::duration<double> TMap(const std::variant<long double, unsigned long long>& seconds) {
+    [[nodiscard]] constexpr std::chrono::duration<double> TMap(const std::variant<long double, unsigned long long>& seconds) {
         return std::visit([](auto&& value) {
             if constexpr (Unit == TUnit::SECOND) {
                 return time(value, 1.0);
@@ -32,7 +32,7 @@ namespace literals {
 
 
 
-double gen_random() noexcept {
+[[nodiscard]] double gen_random() noexcept {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     static std::uniform_real_distribution<double> dis(1.0, 10.0);

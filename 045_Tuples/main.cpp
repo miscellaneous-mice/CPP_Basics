@@ -23,7 +23,7 @@ void print (const T& firstArg, const Types&... args) {
 }
 
 template<typename... Args>
-constexpr auto TotalSum(Args&&... args) {
+[[nodiscard]] constexpr auto TotalSum(Args&&... args) {
     print(std::forward<Args>(args)...);
     using resulttype = std::common_type<std::decay_t<Args>...>::type;
     auto values = std::make_tuple(std::forward<Args>(args)...);
@@ -35,7 +35,7 @@ constexpr auto TotalSum(Args&&... args) {
 }
 
 template<typename... Tp>
-std::ostream& operator<<(std::ostream& stream, const std::tuple<Tp...>& args) {
+[[nodiscard]] std::ostream& operator<<(std::ostream& stream, const std::tuple<Tp...>& args) {
     stream << "(";
     std::apply([&stream](const auto&... elems) {
         ((stream << elems << ", "), ...);
