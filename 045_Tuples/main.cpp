@@ -35,7 +35,7 @@ template<typename... Args>
 }
 
 template<typename... Tp>
-[[nodiscard]] std::ostream& operator<<(std::ostream& stream, const std::tuple<Tp...>& args) {
+std::ostream& operator<<(std::ostream& stream, const std::tuple<Tp...>& args) {
     stream << "(";
     std::apply([&stream](const auto&... elems) {
         ((stream << elems << ", "), ...);
