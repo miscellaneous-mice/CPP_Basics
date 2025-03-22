@@ -154,6 +154,28 @@ struct Array {
     const T* end() const { return array + N; };
 };
 
+template<>
+struct Array<int> { // Template specialization for int Arrays
+    int* array;
+    size_t N;
+    Array() : array(nullptr), N(0) { std::cout<<"Specialized for int arrays"<<std::endl; };
+    Array(std::initializer_list<int> values) : N(values.size()){
+        array = new int[N];
+        std::memcpy(array, values.begin(), N * sizeof(int));
+        std::cout<<"Specialized for int arrays"<<std::endl;
+    }
+    Array& operator=(std::initializer_list<int> values) {
+        N = values.size();
+        delete[] array;
+        array = new int[N];
+        std::memcpy(array, values.begin(), N * sizeof(int));
+        return *this;
+    }
+    int& operator[](size_t index) const { return array[index]; };
+    const int* begin() const { return array; };
+    const int* end() const { return array + N; };
+};
+
 template<typename T, typename U>
 constexpr Number<std::common_type_t<T, U>>
     operator+(const Number<T>& lhs, const Number<U>& rhs) {

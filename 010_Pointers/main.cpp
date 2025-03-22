@@ -33,6 +33,11 @@ int main()
 
 	// As we allocated memory in the heap memory using the [] operation, we should also delete the data after we've done with it using [] operator
 	delete[] buffer;
+
+	Log("\nPointers are just ints");
+    uintptr_t addr = reinterpret_cast<uintptr_t>(ptr); // Same as (uint64_t)ptr
+    std::cout << "Pointer Address (stored in uintptr_t): " << addr << std::endl;
+    std::cout << "Pointer Address (directly from pointer): " << ptr << std::endl;
 }
 #endif
 
@@ -59,5 +64,8 @@ Double pointers
 	-> As pointers themselves are variables, hence there the address stored for every pointer. Hence we can use another pointer to point to our pointer.
 	-> The double pointers address size is equal to n-bit application of our PC. If we are running a 32-bit application then our address size is 4 bytes.
 	-> Due to our endianess of the machine, the order in which a sequence of bytes is stored in computer memory is in reverse order (little endian -> LSB first)
-	
+
+Unlike uint64_t, which is always 64-bit, uintptr_t adapts to the architecture (e.g., 32-bit or 64-bit), i.e.
+for 32 bit architecture -> uint32_t addr = (uint32_t)ptr
+for 64 bit architecture -> uint64_t addr = (uint64_t)ptr
 */

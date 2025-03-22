@@ -69,6 +69,10 @@
         "print": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "forward_list": "cpp"
+        "forward_list": "cpp",
+        "span": "cpp",
+        "filesystem": "cpp",
+        "functional": "cpp",
+        "system_error": "cpp"
     }
 }

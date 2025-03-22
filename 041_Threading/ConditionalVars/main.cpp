@@ -1,50 +1,121 @@
-#include <iostream>
-#include <thread>
-#include <mutex>
 #include <condition_variable>
+#include <string>
+#include <pthread.h>
+#include <thread>
+#include <vector>
+#include <iostream>
+#include <mach/mach.h>
 
-static int num_threads = 5;
-static std::mutex mtx;
-static std::condition_variable cv;
-static bool ready = false;
+using namespace std::literals::chrono_literals;
 
-void print_id (int id) {
-    std::unique_lock<std::mutex> lck(mtx);
-    std::cout<<"Thread : "<<id<<" Waiting for Execution..."<<std::endl;
-    // cv.wait(lck, [&id] {
-    //     std::cout<<"Thread : "<<id<<" is sleeping"<<std::endl;
-    //     return ready;
-    // });
-    while (!ready) {
-        std::cout<<"Thread : "<<id<<" is sleeping"<<std::endl;
-        cv.wait(lck);
-    }
-    std::cout << "thread " << id << '\n';
-}
-
-void go() {
-    std::lock_guard<std::mutex> lck(mtx);
-    ready = true;
-    cv.notify_all();
-}
-
-int main ()
-{
-    using namespace std::literals::chrono_literals;
-    std::thread threads[num_threads];
-    // spawn 10 threads:
-    for (int i=0; i<num_threads; ++i) {
-        threads[i] = std::thread(std::bind(&print_id,i));
+class Reporter {
+public:
+    Reporter() {
+        task_threads(mach_task_self(), &threads, &thread_count);
+        std::cout << "[Reporter] Reporter loaded. Found " << thread_count << " threads." << std::endl;
     }
 
-    std::cout << "5 threads ready to race...\n";
-    std::this_thread::sleep_for(2s);
-    go();
-
-    for (auto& th : threads){
-        std::cout<<"Closed thread"<<std::endl;
-        th.join();
+    void report() {
+        std::cout << "[Reporter] Reporting all threads:" << std::endl;
+        for (int i = 0; i < thread_count; i++) {
+            char thread_name[64];
+            uint64_t tid;
+            pthread_t pthread = pthread_from_mach_thread_np(threads[i]);
+            pthread_getname_np(pthread, thread_name, sizeof(thread_name));
+            pthread_threadid_np(pthread, &tid);
+            std::cout << "[Reporter]   - thread " << i << " name: " 
+                    << thread_name << " tid: " << tid << std::endl;
+        }
     }
 
-    return 0;
+private:
+    thread_act_array_t threads;
+    mach_msg_type_number_t thread_count;
+};
+
+class Worker {
+public:
+    Worker(int16_t n) : num_workers(n), num_ready(0) { }
+
+    void worker_thread(std::string thread_name, uint16_t thread_id) {
+
+        // Thread preparation
+        {
+            std::lock_guard<std::mutex> lck(mtx);
+            pthread_setname_np(thread_name.c_str());
+            std::cout << "[Worker] Thread " << thread_name << " ready to run." << std::endl;
+            num_ready++;
+            cv_ready.notify_one();
+        }
+
+        // Suspend all threads until ready
+        std::unique_lock<std::mutex> lck(mtx);
+        cv.wait(lck, [this] {
+            return num_ready == num_workers;
+        });
+
+        // Allow parallel execution of worker threads
+        lck.unlock();
+
+        // Thread payload
+        std::this_thread::sleep_for(1s);
+
+        {
+            std::lock_guard<std::mutex> lck(mtx);
+            std::cout << "[Worker] Thread " << thread_name << " finished." << std::endl;
+        }
+    }
+
+    void create_workers() {
+        std::string main_thread_name = "main";
+        pthread_setname_np(main_thread_name.c_str());
+        for (int i = 0; i < num_workers; i++) {
+            std::string worker_name = "worker-" + std::to_string(i);
+            m_threads.emplace_back(&Worker::worker_thread, this, worker_name, i);
+        }
+
+        // Wait for all threads to be loaded
+        std::unique_lock<std::mutex> lck(mtx_ready);
+        cv_ready.wait(lck, [this] {
+            return num_ready == num_workers;
+        });
+
+
+    }
+
+    void report() {
+        std::unique_ptr<Reporter> reporter = std::make_unique<Reporter>();
+        reporter->report();
+    }
+
+    void run() {
+        // Notify all threads to start
+        cv.notify_all();
+        for (auto &t: m_threads) {
+            t.join();
+        }
+    }
+
+private:
+    int16_t num_workers;
+    int16_t num_ready;
+    std::vector<std::thread> m_threads;
+
+    std::condition_variable cv;
+    std::mutex mtx;
+
+    std::condition_variable cv_ready;
+    std::mutex mtx_ready;
+};
+
+int main() {
+    // Create threads
+    std::unique_ptr<Worker> worker = std::make_unique<Worker>(5);
+    worker->create_workers();
+
+    // Do something before actual threads execution, after all threads are created and configured.
+    worker->report();
+
+    // Start all worker threads
+    worker->run();
 }
