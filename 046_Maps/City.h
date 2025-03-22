@@ -20,3 +20,9 @@ struct City {
         return res < 0;
     }
 };
+
+std::ostream& operator<<(std::ostream& stream, const City& city) {
+    std::cout<<"Population : "<<city.population << "\nCity : "<<city.name 
+    << "\nLatitude, Longitude : " << "(" << city.lat << ", " <<city.lng << ")" << std::endl;
+    return stream;
+}
