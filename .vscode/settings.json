@@ -73,6 +73,9 @@
         "span": "cpp",
         "filesystem": "cpp",
         "functional": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "chrono": "cpp",
+        "random": "cpp",
+        "ranges": "cpp"
     }
 }
