@@ -120,14 +120,14 @@ struct HashMapIterator {
     HashMapIterator(PairType HM_pair) : m_Pair(HM_pair) {}
 
     // PreFix operator
-    HashMapIterator operator++() {
+    HashMapIterator operator++() const {
         ++m_Pair.first;
         ++m_Pair.second;
         return *this;
     }
 
     // PostFix operator
-    HashMapIterator operator++(int) {
+    HashMapIterator operator++(int) const {
         HashMapIterator iterator = *this; 
         ++(*this);
         return iterator;
@@ -163,6 +163,7 @@ struct HashMap {
     using KeyType = K;
     using ValueType = V;
     using Iterator = HashMapIterator<HashMap<K, V>>;
+    using constIterator = const HashMapIterator<HashMap<K, V>>;
     V& operator[](const K& key) {
         for (size_t i = 0; i < keys.size(); ++i) {
             if (keys[i] == key) {
@@ -180,6 +181,14 @@ struct HashMap {
 
     Iterator end() {
         return Iterator(std::make_pair(keys.end(), values.end()));
+    }
+
+    constIterator begin() const {
+        return constIterator(std::make_pair(keys.end(), values.end()));
+    }
+
+    constIterator end() const {
+        return constIterator(std::make_pair(keys.end(), values.end()));
     }
 };
 
@@ -199,7 +208,7 @@ int main() {
     }
     std::cout<<std::endl;
 
-    for (HashMap<const char*, int>::Iterator it = hashmap.begin(); it != hashmap.end(); it++) {
+    for (HashMap<const char*, int>::constIterator it = hashmap.begin(); it != hashmap.end(); it++) {
         std::cout<<it->first<<" : "<<it->second<<", ";
     }
 
