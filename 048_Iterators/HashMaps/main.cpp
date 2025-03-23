@@ -112,43 +112,38 @@ private:
 
 template<typename HashMap>
 struct HashMapIterator {
-    using KeyType = HashMap::KeyType;
-    using ValueType = HashMap::ValueType;
+    using KeyType = typename HashMap::KeyType;
+    using ValueType = typename HashMap::ValueType;
+    using PairStorage = typename std::pair<KeyType, ValueType>;
     using PairType = typename std::pair<typename Array<KeyType>::Iterator, typename Array<ValueType>::Iterator>;
-    HashMapIterator(PairType HM_pair) : m_Pair(HM_pair) {};
+    
+    HashMapIterator(PairType HM_pair) : m_Pair(HM_pair) {}
 
     // PreFix operator
-    HashMapIterator operator++() const {
-        m_Pair.first++;
-        m_Pair.second++;
+    HashMapIterator operator++() {
+        ++m_Pair.first;
+        ++m_Pair.second;
         return *this;
     }
 
     // PostFix operator
-    HashMapIterator operator++(int) const {
+    HashMapIterator operator++(int) {
         HashMapIterator iterator = *this; 
         ++(*this);
         return iterator;
     }
 
-    HashMapIterator operator--() {
-        m_Pair.first--;
-        m_Pair.second--;
-        return *this;
-    }
-
-    HashMapIterator operator--(int) {
-        HashMapIterator iterator = *this; 
-        --(*this);
-        return iterator;
-    }
-
-    std::pair<KeyType, ValueType> operator*() const {
+    PairStorage operator*() const {
         return std::make_pair(*m_Pair.first, *m_Pair.second);
     }
 
+    PairStorage* operator->() const {
+        m_PairStorage = std::make_pair(*m_Pair.first, *m_Pair.second);
+        return &m_PairStorage;
+    }
+
     bool operator==(const HashMapIterator& other) const {
-        return this->m_Pair.first == other.m_Pair.first;
+        return m_Pair.first == other.m_Pair.first;
     }
 
     bool operator!=(const HashMapIterator& other) const {
@@ -156,8 +151,10 @@ struct HashMapIterator {
     }
 
 private:
-    mutable PairType m_Pair;
+    PairType m_Pair;
+    mutable PairStorage m_PairStorage; // Storage for operator->()
 };
+
 
 template<typename K, typename V, template<typename> typename C = Array>
 struct HashMap {
@@ -192,8 +189,18 @@ int main() {
     hashmap["b"] = 2;
     std::cout<<hashmap["b"]<<std::endl;
 
+    for (const auto& pair: hashmap) {
+        std::cout<<pair.first<<" : "<<pair.second<<", ";
+    }
+    std::cout<<std::endl;
+
     for (HashMap<const char*, int>::Iterator it = hashmap.begin(); it != hashmap.end(); it++) {
-        std::cout<<(*it).first<<" : "<<(*it).second<<std::endl;
+        std::cout<<(*it).first<<" : "<<(*it).second<<", ";
+    }
+    std::cout<<std::endl;
+
+    for (HashMap<const char*, int>::Iterator it = hashmap.begin(); it != hashmap.end(); it++) {
+        std::cout<<it->first<<" : "<<it->second<<", ";
     }
 
     return 0;
