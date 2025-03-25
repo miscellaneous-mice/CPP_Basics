@@ -8,45 +8,45 @@
 template<typename U>
 class iterator {
 private:
-    U* __array__;
+    U* array;
     size_t N;
 public:
-    // iterator() : __array__(nullptr), N(0) {};
+    // iterator() : array(nullptr), N(0) {};
     iterator(size_t N) : N(N) {
-        __array__ = new U[N];
+        array = new U[N];
     };
     iterator(const iterator& other) {
         N = other.N;
-        std::copy(other.__array__, other.__array__ + N, this->__array__);
+        std::copy(other.array, other.array + N, this->array);
     }
     iterator(iterator&& other) {
         N = other.N;
-        std::copy(other.__array__, other.__array__ + N, this->__array__);
-        other.__array__ = nullptr;
+        std::copy(other.array, other.array + N, this->array);
+        other.array = nullptr;
         other.N = 0;
     }
     iterator& operator=(const iterator& other) {
         if (this != &other){
             N = other.N;
-            delete[] __array__;
-            __array__ = new U[N];
-            memset(__array__, other.__array__, N);
+            delete[] array;
+            array = new U[N];
+            memset(array, other.array, N);
         }
         return *this;
     }
     iterator& operator=(iterator&& other) {
         if (this != &other){
             N = other.N;
-            delete[] __array__;
-            __array__ = new U[N];
-            memset(__array__, other.__array__, N);
-            other.__array__ = nullptr;
+            delete[] array;
+            array = new U[N];
+            memset(array, other.array, N);
+            other.array = nullptr;
             other.N = 0;
         }
         return *this;
     }
     U& operator[](size_t index) const {
-        return __array__[index];
+        return array[index];
     }
 
     template<typename T>
@@ -57,9 +57,9 @@ public:
         }
         using ResultType = typename std::common_type<T, U>::type;
         iterator<ResultType> res_arr;
-        res_arr.__array__ = new U[N];
+        res_arr.array = new U[N];
         for(size_t i = 0; i < N; i++) {
-            res_arr.__array__[i] = static_cast<ResultType>(other[i]) + static_cast<ResultType>((*this)[i]);
+            res_arr.array[i] = static_cast<ResultType>(other[i]) + static_cast<ResultType>((*this)[i]);
         }
         return res_arr;
     }
@@ -68,41 +68,41 @@ public:
         return N;
     }
 
-    const U* begin() const {return __array__; }
-    const U* end() const {return __array__ + N; }
-    ~iterator() { delete[] __array__; }
+    const U* begin() const {return array; }
+    const U* end() const {return array + N; }
+    ~iterator() { delete[] array; }
 };
 
 template<typename T>
 class ring {
 private:
     size_t max_len, N;
-    iterator<T>* __iter__;
+    iterator<T>* iter;
 public:
     ring(size_t max_len) : max_len(max_len), N(0) {
-        __iter__ = new iterator<T>(max_len);
+        iter = new iterator<T>(max_len);
     };
 
     ring(ring&& other) {
         max_len = other.max_len;
-        __iter__ = std::move(other.__iter__);
+        iter = std::move(other.iter);
         other.max_len = 0;
     }
 
-    ~ring() { delete[] __iter__; }
+    ~ring() { delete[] iter; }
 
     T& operator[](size_t index) const {
-        return (*__iter__)[index];
+        return (*iter)[index];
     }
 
     iterator<T>* operator->(){
-        iterator<T>* __iter_cpy__ = __iter__;
-        return __iter_cpy__;
+        iterator<T>* iter_cpy = iter;
+        return iter_cpy;
     }
 
     const iterator<T>* operator->() const {
-        iterator<T>* __iter_cpy__ = __iter__;
-        return __iter_cpy__;
+        iterator<T>* iter_cpy = iter;
+        return iter_cpy;
     }
 
     ring(const ring& other) = delete;
@@ -113,7 +113,7 @@ public:
     }
 
     void Print() const {
-        for (auto element : *__iter__){
+        for (auto element : *iter){
             std::cout<<element<<std::endl;
         }
     }
