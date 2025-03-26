@@ -1,6 +1,7 @@
 #include <random>
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include <iomanip>
 
 class Random {
@@ -11,9 +12,13 @@ public:
         return instance;
     }
 
-    static double randnum() {
+    static double RandomNumber() {
         return Get().gen_random();
     }
+
+    static std::vector<double> GenRandElements(size_t n) {
+        return std::vector<double>(n, RandomNumber());
+    } 
 private:
     Random() = default;
     double gen_random() noexcept
@@ -26,10 +31,14 @@ private:
 };
 
 int main() {
-    std::cout<<Random::randnum()<<std::endl;
-    std::cout<<Random::randnum()<<std::endl;
-    std::cout<<Random::randnum()<<std::endl;
-    std::cout<<Random::randnum()<<std::endl;
-    std::cout<<Random::randnum()<<std::endl;
+    std::cout<<Random::RandomNumber()<<std::endl;
+    std::cout<<Random::RandomNumber()<<std::endl;
+    std::cout<<Random::RandomNumber()<<std::endl;
+    std::cout<<Random::RandomNumber()<<std::endl;
+    std::cout<<Random::RandomNumber()<<std::endl;
+
+    for(auto& rand_elem : Random::GenRandElements(5))
+        std::cout<<rand_elem<<", ";
+    std::cout<<std::endl;
     return 0;
 }
