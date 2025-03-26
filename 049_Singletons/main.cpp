@@ -16,7 +16,7 @@ public:
         return Get().gen_random();
     }
 
-    static std::vector<double> GenRandElements(size_t n) {
+    static std::vector<double> GenRandElements(size_t&& n) {
         return std::vector<double>(n, RandomNumber());
     } 
 private:
