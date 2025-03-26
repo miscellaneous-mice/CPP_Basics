@@ -76,6 +76,9 @@
         "system_error": "cpp",
         "chrono": "cpp",
         "random": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "future": "cpp",
+        "condition_variable": "cpp",
+        "thread": "cpp"
     }
 }

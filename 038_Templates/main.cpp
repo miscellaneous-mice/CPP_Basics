@@ -149,6 +149,28 @@ struct Array {
         std::memcpy(array, values.begin(), N * sizeof(T));
         return *this;
     }
+
+    template<typename U>
+    Array(const Array<U>& other) : N(other.N) {
+        using CT = typename std::common_type<T, U>::type;
+        array = new T[N];
+        for (size_t i = 0; i < N; i++) {
+            array[i] = static_cast<T>(other.array[i]); // Convert elements
+        }
+    }
+
+    template<typename U>
+    auto operator=(const Array<U>& other) {
+        using CT = typename std::common_type<std::decay_t<T>, std::decay_t<U>>::type;
+        Array<CT> new_array;
+        new_array.N = 0;
+        new_array.array = new CT[N];
+        for (int i = 0; i < N; i++) {
+            new_array[i] = static_cast<CT>(other.array[i]);
+        }
+        return array;
+    }
+
     T& operator[](size_t index) const { return array[index]; };
     const T* begin() const { return array; };
     const T* end() const { return array + N; };
@@ -169,6 +191,13 @@ struct Array<int> { // Template specialization for int Arrays
         delete[] array;
         array = new int[N];
         std::memcpy(array, values.begin(), N * sizeof(int));
+        return *this;
+    }
+    Array& operator=(const Array& other) {
+        N = other.N;
+        delete[] array;
+        array = new int[N];
+        std::memcpy(array, other.begin(), N * sizeof(int));
         return *this;
     }
     int& operator[](size_t index) const { return array[index]; };
@@ -227,6 +256,8 @@ int main(){
     Array<int> arr1 = {1, 2, 3, 4, 5};
     Array<float> arr2;
     arr2 = {5.32f, 6.85f, 7.084f, 8.854f, 9.95f};
+    Array<float> arr3;
+    arr3 = arr1;
     auto res_arr = arr1 * arr2;
     for (auto r : res_arr) {
         std::cout<<r<<" ";

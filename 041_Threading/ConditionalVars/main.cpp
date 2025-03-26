@@ -4,9 +4,19 @@
 #include <thread>
 #include <vector>
 #include <iostream>
+#include <iomanip>
+#include <random>
 #include <mach/mach.h>
 
 using namespace std::literals::chrono_literals;
+
+long gen_random() noexcept
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<double> dis(0, 10.0);
+    return static_cast<long>(dis(gen));
+}
 
 class Reporter {
 public:
@@ -37,7 +47,7 @@ class Worker {
 public:
     Worker(int16_t n) : num_workers(n), num_ready(0) { }
 
-    void worker_thread(std::string thread_name, uint16_t thread_id) {
+    void worker_thread(std::string thread_name) {
 
         // Thread preparation
         {
@@ -57,12 +67,14 @@ public:
         // Allow parallel execution of worker threads
         lck.unlock();
 
-        // Thread payload
-        std::this_thread::sleep_for(1s);
+        // Execution of thread
+        auto st = std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(std::chrono::seconds(gen_random()));
 
         {
             std::lock_guard<std::mutex> lck(mtx);
-            std::cout << "[Worker] Thread " << thread_name << " finished." << std::endl;
+            std::cout << "[Worker] Thread " << thread_name
+            << " finished. Time taken: " << std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - st).count() << std::endl;
         }
     }
 
@@ -71,7 +83,7 @@ public:
         pthread_setname_np(main_thread_name.c_str());
         for (int i = 0; i < num_workers; i++) {
             std::string worker_name = "worker-" + std::to_string(i);
-            m_threads.emplace_back(&Worker::worker_thread, this, worker_name, i);
+            m_threads.emplace_back(&Worker::worker_thread, this, worker_name);
         }
 
         // Wait for all threads to be loaded

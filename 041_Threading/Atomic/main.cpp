@@ -1,59 +1,40 @@
 #include <iostream>
 #include <thread>
-#include <iomanip>
-#include <cmath>
-#include <random>
 #include <mutex>
 #include <chrono>
-#include <ranges>
+#include <vector>
 #include <map>
-#include <condition_variable>
+#include <iomanip>
+#include <future>
 #include "../algebra.h"
+
+
+template<typename Callable, typename... Args>
+auto SafeTask(Callable&& function, Args&&... args) {
+    auto lambda = [func = std::move(function), args_tuple = std::make_tuple(std::move(args)...)]() {
+        return std::apply(func, args_tuple);
+    };
+    return lambda;
+}
 
 class Benchmark {
 public:
     Benchmark() = default;
     
     template<typename Callable, typename... Args>
-    void add_benchmark(const std::string& name, Callable function, Args... args) {
+    void add_benchmark(const std::string& name, Callable&& function, Args&&... args) {
         std::cout << "Adding benchmark: " << name << std::endl;
-        processes.emplace_back([this, name_copy = name, func = std::move(function), 
-                                args_tuple = std::make_tuple(std::move(args)...)]() {
+
+        processes.emplace_back([&]() {
             ++active_threads;
-            {
-                std::lock_guard<std::mutex> lock(gLock);
-                logprocess[std::this_thread::get_id()] = name_copy;
-            }
+            StartBench(name);
             cv.notify_all();
-            
-            auto run_func = [&]() {
-                return std::apply(func, args_tuple);
-            };
-            
-            // Warmup runs
-            for (int i = 0; i < 5; ++i) {
-                sink = run_func();
-            }
-            
-            // Actual benchmark
-            auto st = std::chrono::high_resolution_clock::now();
-            const int num = 10'000;
-            for (int i = 0; i < num; ++i) {
-                sink = run_func();
-            }
-            auto end = std::chrono::high_resolution_clock::now();
-            auto diff = std::chrono::duration_cast<std::chrono::microseconds>(end - st);
-            
+
+            auto run_func = SafeTask(function, std::forward<decltype(args)>(args)...);
+            auto diff = RunBench(run_func);
+
+            StopBench(diff, name);
             --active_threads;
-            {
-                std::lock_guard<std::mutex> lock(gLock);
-                std::cout << std::fixed << std::setprecision(6)
-                            << "Benchmark: " << name_copy
-                            << "\nTotal Time: " << diff.count() << " microsecs"
-                            << "\nAverage Time: " << static_cast<double>(diff.count()) / num << " microsecs/iteration"
-                            << std::endl;
-                logprocess.erase(std::this_thread::get_id());
-            }
             cv.notify_all();
         });
     }
@@ -68,11 +49,42 @@ public:
         }
         
         // Wait until at least one process has registered in the logprocess map
-        cv.wait(lock, [this]() { return !logprocess.empty() || active_threads == 0; });
+        cv.wait(lock, [this] { return !logprocess.empty() || active_threads == 0; });
         
         for (const auto& [thread_id, process_name] : logprocess) {
             std::cout << "Process ID: " << thread_id << " Name: " << process_name << std::endl;
         }
+    }
+
+    void StartBench(const std::string& name) {
+        std::lock_guard<std::mutex> lock(gLock);
+        logprocess[std::this_thread::get_id()] = name;
+    }
+
+    void StopBench(const std::chrono::microseconds& diff, const std::string& name) {
+        std::lock_guard<std::mutex> lock(gLock);
+        std::cout << std::fixed << std::setprecision(6)
+                    << "Benchmark: " << name
+                    << "\nTotal Time: " << diff.count() << " microsecs"
+                    << "\nAverage Time: " << static_cast<double>(diff.count()) / bench_cycles << " microsecs/iteration"
+                    << std::endl;
+        logprocess.erase(std::this_thread::get_id());
+    }
+
+    template<typename Callable>
+    [[nodiscard]] std::chrono::microseconds RunBench(Callable&& bench_func) {
+        // Warmup runs
+        for (int i = 0; i < 5; ++i) {
+            sink = bench_func();
+        }
+        
+        // Actual benchmark
+        auto st = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < bench_cycles; ++i) {
+            sink = bench_func();
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        return std::chrono::duration_cast<std::chrono::microseconds>(end - st);
     }
     
     ~Benchmark() {
@@ -88,8 +100,10 @@ private:
     std::mutex gLock;
     std::condition_variable cv;
     std::atomic<int> active_threads{0};
+    const int bench_cycles{10'000};
     volatile double sink{};
 };
+
 
 int main() {
     using namespace std::literals::chrono_literals;
