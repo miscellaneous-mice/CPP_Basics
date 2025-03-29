@@ -184,7 +184,7 @@ struct HashMap {
     }
 
     constIterator begin() const {
-        return constIterator(std::make_pair(keys.end(), values.end()));
+        return constIterator(std::make_pair(keys.begin(), values.begin()));
     }
 
     constIterator end() const {
