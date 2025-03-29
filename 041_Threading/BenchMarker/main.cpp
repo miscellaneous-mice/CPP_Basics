@@ -9,7 +9,7 @@
 #include <future>
 #include <random>
 #include <mach/mach.h>
-#include "algebra.h"
+#include "../algebra.h"
 
 
 template<typename Callable, typename... Args>
