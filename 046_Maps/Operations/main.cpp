@@ -5,8 +5,8 @@ namespace std {
     class enhanced_map : public std::unordered_map<T, City> {
     public:
         const City& at(const T& key) const {
-            if (this->find("Melbourne") != this->end()) {
-                return this->std::unordered_map<T, City>::at("Melbourne");
+            if (this->find(key) != this->end()) {
+                return this->std::unordered_map<T, City>::at(key);
             } else {
                 std::cerr << "No key found in the hashmap" << std::endl;
                 throw std::out_of_range("Key not found");
@@ -15,8 +15,8 @@ namespace std {
 
         // Override erase() but call std::unordered_map<T, City>::erase()
         size_t erase(const T& key) {
-            if (this->find("Melbourne") != this->end()) {
-                return this->std::unordered_map<T, City>::erase("Melbourne");
+            if (this->find(key) != this->end()) {
+                return this->std::unordered_map<T, City>::erase(key);
             } else {
                 std::cerr << "No key found in the hashmap" << std::endl;
                 return 0;
