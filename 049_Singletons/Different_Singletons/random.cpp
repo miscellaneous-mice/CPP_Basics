@@ -7,9 +7,6 @@ namespace Uniform {
 
     Random& Random::getinstance() {
         static Random* instance = new Random();
-        if (instance == nullptr) {
-            throw std::runtime_error("Uniform Random instance has been deleted!");
-        }
         return *instance;
     }
 
@@ -23,11 +20,10 @@ namespace Uniform {
     }
 
     void Random::Shutdown() {
-        static Random*& instance = *reinterpret_cast<Random**>(&getinstance());
+        static Random* instance = &getinstance();
         if (instance) {
             delete instance;
             instance = nullptr;
-            std::cout << "Uniform randomizer instance deleted" << std::endl;
         } else {
             std::cout << "Uniform randomizer instance already deleted" << std::endl;
         }
@@ -43,16 +39,13 @@ namespace Normal {
         std::cout << "Initialized Normal randomizer" << std::endl;
     }
 
-    Random& Random::getinstance() {
-        static Random* instance = new Random();
-        if (instance == nullptr) {
-            throw std::runtime_error("Normal Random instance has been deleted!");
-        }
-        return *instance;
+    void Random::Init() {
+        instance = new Random();
     }
 
     double Random::Generator(long double a, long double b) {
-        return getinstance().gen_random(a, b);
+        if (!instance) Init();
+        return instance->gen_random(a, b);
     }
 
     double Random::gen_random(long double a, long double b) noexcept {
@@ -61,14 +54,44 @@ namespace Normal {
     }
 
     void Random::Shutdown() {
-        static Random*& instance = *reinterpret_cast<Random**>(&getinstance());
-        if (instance) {
-            delete instance;
-            instance = nullptr;
-            std::cout << "Normal randomizer instance deleted" << std::endl;
-        } else {
+        if (!instance) {
             std::cout << "Normal randomizer instance already deleted" << std::endl;
+            return;
         }
+        delete instance;
+        instance = nullptr;
+    }
+
+    Random::~Random() {
+        std::cout << "Destroyed Normal randomizer instance" << std::endl;
+    }
+}
+
+namespace Global {
+    static Random* s_Instance = nullptr; 
+
+    Random::Random() : gen(rd()), dis(4) {
+        std::cout << "Initialized Normal randomizer" << std::endl;
+    }
+
+    void Random::Init() {
+        s_Instance = new Random();
+    }
+
+    double Random::Generator(long double c) {
+        assert(s_Instance);
+        return s_Instance->gen_random(c);
+    }
+
+    double Random::gen_random(double c) noexcept {
+        dis.param(std::poisson_distribution<int>::param_type(c));
+        return dis(gen);
+    }
+
+    void Random::Shutdown() {
+        assert(s_Instance);
+        delete s_Instance;
+        s_Instance = nullptr;
     }
 
     Random::~Random() {

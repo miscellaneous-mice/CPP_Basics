@@ -2,7 +2,6 @@
 
 // If the Struct/Class variables are static then only define outside the class/struct scope to be used by the instances of class/struct
 int Entity::a;
-int Entity::c;
 
 void Entity::Print(){
     std::cout << a << ", "<< b <<  ", " << c << std::endl;

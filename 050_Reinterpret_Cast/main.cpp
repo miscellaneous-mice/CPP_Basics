@@ -45,6 +45,16 @@ void Print(const std::variant<long, double, float, int>& value) {
     }, value);
 }
 
+void Print(GameState* gs) {
+    std::cout<<"Current state of game is : " 
+    << "Current level : " << gs->level 
+    << ", Current health : " << gs->health
+    << ", Current score : " << gs->score
+    << ", Is game completed : " << gs->game_completed
+    << ", Is boss defeated : " << gs->boss_defeated
+    << std::endl;
+}
+
 void Delete(GameState* gs) {
     GameState* instance = *reinterpret_cast<GameState**>(gs);
     if (instance != nullptr) {
@@ -88,7 +98,9 @@ int main() {
 
     std::cout<<"\nHandling double delete of values"<<std::endl;
     GameState* gs = new GameState(66, 100, 900, false, true);
+    Print(gs);
     Delete(gs);
+    Print(gs);
     Delete(gs);
     return 0;
 }

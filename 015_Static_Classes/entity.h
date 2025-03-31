@@ -5,8 +5,9 @@
 
 struct Entity
 {
-  static int a, c;
+  static int a;
   int b;
+  static inline int c;
   void Print();
   void add_to_a(int num);
   static void add_to_b(Entity& e, int num);

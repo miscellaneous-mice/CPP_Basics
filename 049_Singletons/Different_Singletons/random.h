@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <cassert>
 
 namespace Uniform {
     class Random {
@@ -28,7 +29,7 @@ namespace Uniform {
 namespace Normal {
     class Random {
         public:
-            static Random& getinstance();
+            static void Init();
             Random(const Random&) = delete;
             Random& operator=(const Random&) = delete;
             Random(Random&&) = delete;
@@ -44,5 +45,28 @@ namespace Normal {
             std::random_device rd;
             std::mt19937 gen;
             std::normal_distribution<double> dis;
+            static inline Random* instance = nullptr;
+    };
+}
+
+namespace Global {
+    class Random {
+        public:
+            static void Init();
+            Random(const Random&) = delete;
+            Random& operator=(const Random&) = delete;
+            Random(Random&&) = delete;
+            Random& operator=(Random&&) = delete;
+            static void Shutdown();
+            static double Generator(long double c = 4.0);
+        private:
+            Random();
+            ~Random();
+
+            double gen_random(double c) noexcept;
+        
+            std::random_device rd;
+            std::mt19937 gen;
+            std::poisson_distribution<int> dis;
     };
 }
