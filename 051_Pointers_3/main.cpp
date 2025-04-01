@@ -124,11 +124,11 @@ int main() {
 	std::cout<<"------------------------------"<<std::endl;
 
     std::cout<<"\nType Punning"<<std::endl;
-    int a = 10; // 0a 00 00 00
+    int a = 10; // 0a 00 00 00 -> 4 bytes
     double b = a; // 00 00 00 00 00 00 24 40 -> 8 bytes // Implicit conversion happens automatically : double b = (double)a
     std::cout<<"int : "<<a<<", double : "<<b<<std::endl;
 
-	double c = *(double*)&a; // 0a 00 00 00 00 00 00 00
+	double c = *(double*)&a; // 0a 00 00 00 00 00 00 00 -> 8 bytes, copied the 4 bytes of the a and allocated to c which is 8 bytes
 	std::cout<<"int : "<<a<<", double : "<<c<<std::endl;
 
 	GameState gamestate = GameState(84, 54.7, 10L, false);
