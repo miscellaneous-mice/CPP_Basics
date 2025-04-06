@@ -6,52 +6,52 @@
 
 template<typename T>
 struct Array {
-    T* __array__;
+    T* array;
     size_t N;
 
-    Array() : __array__(new T[0]), N(0) {};
+    Array() : array(new T[0]), N(0) {};
 
-    Array(std::initializer_list<T> values) : __array__(new T[values.size()]), N(values.size()) {
+    Array(std::initializer_list<T> values) : array(new T[values.size()]), N(values.size()) {
         size_t i = 0;
         if constexpr (std::is_trivially_copyable_v<T>) {
-            std::memcpy(__array__, values.begin(), N * sizeof(T));
+            std::memcpy(array, values.begin(), N * sizeof(T));
         } else {
             for (auto val : values) {
-                __array__[i++] = std::move(val);
+                array[i++] = std::move(val);
             }
         }
     }
 
-    Array(const Array& other) : N(other.N), __array__(new T[other.N]) {
+    Array(const Array& other) : N(other.N), array(new T[other.N]) {
         if constexpr (std::is_trivially_copyable_v<T>) {
-            std::memcpy(__array__, other.__array__, N * sizeof(T));
+            std::memcpy(array, other.array, N * sizeof(T));
         } else {
             for (size_t i = 0; i < N; i++) {
-                __array__[i] = std::move(other.__array__[i]);
+                array[i] = std::move(other.array[i]);
             }
         }
     }
 
     Array(Array&& other) {
         N = other.N;
-        __array__ = other.__array__;
-        other.__array__ = nullptr;
+        array = other.array;
+        other.array = nullptr;
         other.N = 0;
     }
 
     Array& operator=(Array&& other)  {
         if (this != &other) {
-            delete[] __array__;
+            delete[] array;
             N = other.N;
-            __array__ = other.__array__;
-            other.__array__ = nullptr;
+            array = other.array;
+            other.array = nullptr;
             other.N = 0;
         }
         return *this;
     }
 
     T& operator[](size_t index) const {
-        return __array__[index];
+        return array[index];
     }
 
     // Generalized operator+ for different types
@@ -74,7 +74,7 @@ struct Array {
     }
 
     Array& operator=(const Array& other) = delete;
-    ~Array() { delete[] __array__; }
+    ~Array() { delete[] array; }
 
     template<typename newtype>
     explicit operator Array<newtype>() const {
@@ -86,23 +86,24 @@ struct Array {
     }
 
     void setsize(size_t new_size) {
-        T* __temp__ = new T[new_size];
+        T* temp = new T[new_size];
         size_t minSize = (new_size < N) ? new_size : N;
-        std::copy(__array__, __array__ + minSize, __temp__);
-        delete[] __array__;
-        __array__ = __temp__;
+        std::copy(array, array + minSize, temp);
+        delete[] array;
+        array = temp;
         N = new_size;
     }
 
-    void push_back(T element) {
+    template<typename U>
+    void push_back(const U& element) {
         setsize(N + 1);
-        __array__[N - 1] = element;
-    }    
+        array[N - 1] = static_cast<T>(element);
+    }
 
-    T* begin() { return __array__; }
-    T* end() { return __array__ + N; }
-    const T* begin() const { return __array__; }
-    const T* end() const { return __array__ + N; }
+    T* begin() { return array; }
+    T* end() { return array + N; }
+    const T* begin() const { return array; }
+    const T* end() const { return array + N; }
 };
 
 template <typename T, size_t N>
