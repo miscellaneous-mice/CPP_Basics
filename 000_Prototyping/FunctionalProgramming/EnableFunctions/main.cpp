@@ -49,6 +49,24 @@ typename std::enable_if<std::is_same_v<ExpectedReturnType, std::invoke_result_t<
     return std::forward<Callable>(callable)(std::forward<Args>(args)...);
 }
 
+template<typename... Args>
+typename std::common_type<std::decay_t<Args>...>::type sum(int exp, Args&&... args) {
+    using ResultType = typename std::common_type<std::decay_t<Args>...>::type;
+    ResultType sum = 0;
+    ((sum += std::pow(args, exp)), ...);
+    return sum;
+}
+
+template<typename ExpectedReturnType = void, int exponential = 1, typename Callable, typename... Args>
+typename std::enable_if<std::is_same_v<ExpectedReturnType, std::invoke_result_t<std::decay_t<Callable>, decltype(exponential), std::decay_t<Args>...>>, ExpectedReturnType>::type ExponentialSum(Callable&& callable, Args&&... args) {
+    std::cout<<"\nCalling sum function with exponential : " <<exponential<<", Parameters : ";
+    ((std::cout<< args << "->" << typeid(args).name() <<" "), ...);
+    std::cout<<std::endl;
+    return std::apply([function = std::forward<Callable>(callable)](auto&&... e) {
+        return function(exponential, std::forward<decltype(e)>(e)...);
+    }, std::make_tuple(std::forward<Args>(args)...));
+}
+
 int main() {
     std::cout<<"Basic Example : "<<std::endl;
     std::cout<<print(42)<<std::endl; // Calls the integer version
@@ -71,5 +89,8 @@ int main() {
     std::cout<<"\nExecuting the function and verify the type : "<<std::endl;
     std::cout<<Execute<float>(&div<float, int>, 5.04f, 44)<<std::endl;
     std::cout<<Execute<long>(&div<long, int>, 5L, 53)<<std::endl;
-    // std::cout<<Execute<long>(&div<long, int>, 5L, 53)<<std::endl; // Error
+    // std::cout<<Execute<int>(&div<long, int>, 5L, 53)<<std::endl; // Error
+
+    std::cout<<ExponentialSum<double, 3>(&sum<int, int, long, double, float>, 1, 2, 5L, 4.534, 3.54f)<<std::endl;
+    // std::cout<<ExponentialSum<int, 3>(&sum<int, int, long, double, float>, 1, 2, 5L, 4.534, 3.54f)<<std::endl; // Error
 }
