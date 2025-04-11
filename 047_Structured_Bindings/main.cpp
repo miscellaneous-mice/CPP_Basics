@@ -29,21 +29,21 @@ template<typename... Tp>
 }
 
 template<typename... Args>
-typename std::common_type<std::decay_t<Args>...>::type sum(int exp, Args&&... args) {
+typename std::common_type<std::decay_t<Args>...>::type sum(Args&&... args) {
     using ResultType = typename std::common_type<std::decay_t<Args>...>::type;
     ResultType sum = 0;
-    ((sum += std::pow(args, exp)), ...);
+    ((sum += args), ...);
     return sum;
 }
 
 template<typename ExpectedReturnType = void, int exponential = 1, typename Callable, typename... Args>
-typename std::enable_if<std::is_same_v<ExpectedReturnType, std::invoke_result_t<std::decay_t<Callable>, decltype(exponential), std::decay_t<Args>...>>, ExpectedReturnType>::type ExponentialSum(Callable&& callable, Args&&... args) {
+typename std::enable_if<std::is_same_v<ExpectedReturnType, std::invoke_result_t<std::decay_t<Callable>, std::decay_t<Args>...>>, ExpectedReturnType>::type ExponentialSum(Callable&& callable, Args&&... args) {
     std::cout<<"Calling sum function with exponential : " <<exponential<<", Parameters : ";
     ((std::cout<< args << "->" << typeid(args).name() <<" "), ...);
     std::cout<<std::endl;
     return std::apply([function = std::forward<Callable>(callable)](auto&&... e) {
-        return function(exponential, std::forward<decltype(e)>(e)...);
-    }, std::make_tuple(std::forward<Args>(args)...));
+        return function(std::forward<decltype(e)>(e)...);
+    }, std::make_tuple(std::pow(args, exponential)...));
 }
 
 template<typename ExpectedReturnType, int... Exponentials, typename... Args>

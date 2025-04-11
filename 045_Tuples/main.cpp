@@ -44,6 +44,19 @@ std::ostream& operator<<(std::ostream& stream, const std::tuple<Tp...>& args) {
     return stream;
 }
 
+template<typename T, std::size_t N, std::size_t... I>
+auto array_to_tuple_impl(const std::array<T, N>& arr, std::index_sequence<I...>) {
+    return std::make_tuple(arr[I]...);
+}
+
+template<std::size_t N>
+constexpr auto arange() {
+    std::array<int, N> arr;
+    for(size_t i = 0; i < N; i++)
+        arr[i] = i;
+    return array_to_tuple_impl(arr, std::make_index_sequence<N>{});
+}
+
 int main() {
     std::tuple args{1.54f, 3, 23L, 0.334};
     auto total_sum = std::apply([args](auto&&... values) {
@@ -67,6 +80,9 @@ int main() {
 
     std::cout<<"\nPrint function"<<std::endl;
     Print(t);
+
+    auto values = arange<10>();
+    Print(values);
 
     std::cout<<"\nGeneralised Print function"<<std::endl;
     auto std_tuple = std::make_tuple(1.45f, 3.0, 33L, "Hola");

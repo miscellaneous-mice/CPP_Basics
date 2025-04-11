@@ -225,8 +225,7 @@ int main() {
             break;
         }
     }
-    std::cout<<future.get()<<std::endl;
-    std::cout<<elements::binomial(1.0/6, 12, 7)<<std::endl;
+    std::cout<<"Async value : " << future.get()<< ", Original Value : " << elements::binomial(1.0/6, 12, 7) <<std::endl;
 
     std::string file = "words_alpha.txt";
     std::array<std::string, 5> words = {"sanity", "goatly", "megame", "scaredfrog", "goatee"};
