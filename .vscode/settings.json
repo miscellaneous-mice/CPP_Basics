@@ -80,5 +80,11 @@
         "future": "cpp",
         "condition_variable": "cpp",
         "thread": "cpp"
-    }
+    },
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && clang++ -std=c++20 -stdlib=libc++ -fdiagnostics-color=always -g $dir/*.cpp -o $fileNameWithoutExt && ./$fileNameWithoutExt"
+    },
+    "code-runner.runInTerminal": true,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.clearPreviousOutput": true
 }

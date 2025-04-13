@@ -17,7 +17,7 @@
                 "cwd": "${fileDirname}"
             },
             "problemMatcher": [
-                "$gcc"  // You can keep this as $gcc or change to $clang if available
+                "$gcc"
             ],
             "group": {
                 "kind": "build",
