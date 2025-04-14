@@ -18,4 +18,9 @@ int main () {
     std::cout << std::hex;
     std::cout << std::setiosflags (std::ios::showbase | std::ios::uppercase);
     std::cout << 100 << std::endl;
+
+    // using fmtflags as class member constants:
+    std::cout.setf (std::ios_base::hex , std::ios_base::basefield);
+    std::cout.setf (std::ios_base::showbase);
+    std::cout << 100 << '\n';
 }

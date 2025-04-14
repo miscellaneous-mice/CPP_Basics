@@ -36,7 +36,7 @@ FileUtils::FileUtils(const std::string& filename) : filename(filename) {
     std::cout << "File at: " << file << std::endl;
 
     // Open the file in append mode
-    MyFile.open(file, std::ios::app | std::ios::in);
+    MyFile.open(file, std::ios::in | std::ios::out | std::ios::app);
     if (!MyFile.is_open()) {
         throw std::runtime_error("Failed to open log file.");
     }
