@@ -79,7 +79,7 @@ namespace Global {
     }
 
     double Random::Generator(long double c) {
-        assert(s_Instance);
+        assertm(s_Instance, "Instance Not Found");
         return s_Instance->gen_random(c);
     }
 
@@ -89,7 +89,7 @@ namespace Global {
     }
 
     void Random::Shutdown() {
-        assert(s_Instance);
+        assertm(s_Instance, "Instance Not Found");
         delete s_Instance;
         s_Instance = nullptr;
     }

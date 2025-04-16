@@ -58,31 +58,6 @@ std::future<std::invoke_result_t<std::decay_t<Callable>, std::decay_t<Args>...>>
         return std::make_tuple(word, false);
     }
 }
-
-class Reporter {
-public:
-    Reporter() {
-        task_threads(mach_task_self(), &threads, &thread_count);
-        std::cout << "[Search] Number of searches still running: " << thread_count - 1 << std::endl;
-    }
-
-    void report() {
-        std::unique_lock<std::mutex> lock(gLock);
-        std::cout << "[Reporter] Reporting all Searches:" << std::endl;
-        for (int i = 1; i < thread_count; i++) {
-            char thread_name[64];
-            uint64_t tid;
-            pthread_t pthread = pthread_from_mach_thread_np(threads[i]);
-            pthread_getname_np(pthread, thread_name, sizeof(thread_name));
-            pthread_threadid_np(pthread, &tid);
-            std::cout << "[Reporter]   - Search for word: " << thread_name << " in thread id: " << tid << std::endl;
-        }
-    }
-
-private:
-    thread_act_array_t threads;
-    mach_msg_type_number_t thread_count;
-};
     
 class SearchWord {
 public:

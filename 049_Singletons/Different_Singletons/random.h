@@ -4,6 +4,8 @@
 #include <random>
 #include <cassert>
 
+#define assertm(exp, msg) assert((void(msg), exp))
+
 namespace Uniform {
     class Random {
         public:
