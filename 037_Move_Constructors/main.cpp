@@ -2,50 +2,89 @@
 #include <cstring>
 
 struct SStream {
-    SStream() : __str__(nullptr), N(0) { std::cout<<"Default constructor"<<std::endl; }
+    SStream() : str(nullptr), N(0) { std::cout<<"Default constructor"<<std::endl; }
 
     SStream(const char* string) {
         std::cout<<"Constructor"<<std::endl;
         N = strlen(string);
-        __str__ = new char[N + 1];  // Allocate memory correctly
-        memcpy(__str__, string, N);
-        __str__[N] = '\0';  // Null-terminate
+        str = new char[N + 1];  // Allocate memory correctly
+        memcpy(str, string, N);
+        str[N] = '\0';  // Null-terminate
     }
 
-    SStream(SStream&& other) noexcept {
+    SStream(SStream&& other) {
         std::cout<<"Move constructor"<<std::endl;
         N = other.N;
-        __str__ = other.__str__;  // Take ownership
-        other.__str__ = nullptr;  // Prevent double free
+        str = other.str;  // Take ownership
+        other.str = nullptr;  // Prevent double free
         other.N = 0;
     }
 
-    SStream& operator=(SStream&& other) noexcept {
+    SStream& operator=(SStream&& other) {
         std::cout<<"Move Assignment Operator"<<std::endl;
         if (this != &other) {
-            delete[] __str__;  // Free old memory
+            delete[] str;  // Free old memory
 
             // Take ownership
             N = other.N;
-            __str__ = other.__str__;
+            str = other.str;
 
             // Prevent double free
-            other.__str__ = nullptr;
+            other.str = nullptr;
             other.N = 0;
         }
         return *this;
     }
     
+    SStream& operator<<(SStream&& other) {
+        std::cout<<"Move Overload Operator"<<std::endl;
+        if (this != &other) {
+
+            char* temp = new char[N];
+            if (str != nullptr) {
+                strcpy(temp, str);
+                delete[] str;  // Free old memory
+            }
+            // Take ownership
+            N = this->N + other.N;
+            str = new char[N];
+            strcpy(str, temp);
+            memcpy(str + strlen(temp), other.str, strlen(other.str));
+
+            // Prevent double free
+            other.str = nullptr;
+            other.N = 0;
+            delete[] temp;
+        }
+        return *this;
+    }
+
+    SStream& operator<<(const char* data) {
+        std::cout<<"Overload Operator"<<std::endl;
+        char* temp = new char[N];
+        if (str != nullptr) {
+            strcpy(temp, str);
+            delete[] str;  // Free old memory
+        }
+        // Take ownership
+        N = this->N + strlen(data);
+        str = new char[N];
+        strcpy(str, temp);
+        memcpy(str + strlen(temp), data, strlen(data));
+        delete[] temp;
+        return *this;
+    }
+
     SStream(const SStream&) = delete;
     SStream& operator=(const SStream&) = delete;
 
-    ~SStream() { delete[] __str__; }  // Free allocated memory
+    ~SStream() { delete[] str; }  // Free allocated memory
 
-    char* begin() const { return __str__; }
-    char* end() const { return __str__ + N; }
+    char* begin() const { return str; }
+    char* end() const { return str + N; }
 
 private:
-    char* __str__;
+    char* str;
     size_t N;
 };
 
@@ -122,4 +161,10 @@ int main() {
     for (auto& s : strs) {
         std::cout<<s<<std::endl;
     }
+
+    SStream ss_val;
+    ss_val<<"Just Overloading some";
+    ss_val<<", What is that! ";
+    ss_val<<std::move(strng5);
+    std::cout<<ss_val<<std::endl;
 }

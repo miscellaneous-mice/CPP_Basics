@@ -32,7 +32,9 @@ template<typename... Args>
 typename std::common_type<std::decay_t<Args>...>::type sum(Args&&... args) {
     using ResultType = typename std::common_type<std::decay_t<Args>...>::type;
     ResultType sum = 0;
-    ((sum += args), ...);
+    using Expander = int[];
+    (void)Expander {0, (void(sum += args), 0)...}; // Same as (void)Expander {0, ((void)(sum += args), 0)...};
+    // ((sum += args), ...); // Has nesting problem
     return sum;
 }
 

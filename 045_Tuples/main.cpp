@@ -57,6 +57,17 @@ constexpr auto arange() {
     return array_to_tuple_impl(arr, std::make_index_sequence<N>{});
 }
 
+template<class F, class... Ts, std::size_t... Is>
+void for_each_in_tuple(const std::tuple<Ts...> & tuple, F func, std::index_sequence<Is...>){
+    using expander = int[];
+    (void)expander {0, ((void)func(std::get<Is>(tuple)), 0)... }; // Same as (func(std::get<Is>(tuple)), ...);
+}
+
+template<class F, class... Ts>
+void for_each_in_tuple(const std::tuple<Ts...> & tuple, F func){
+    for_each_in_tuple(tuple, func, std::make_index_sequence<sizeof...(Ts)>());
+}
+
 int main() {
     std::tuple args{1.54f, 3, 23L, 0.334};
     auto total_sum = std::apply([args](auto&&... values) {
@@ -87,4 +98,8 @@ int main() {
     std::cout<<"\nGeneralised Print function"<<std::endl;
     auto std_tuple = std::make_tuple(1.45f, 3.0, 33L, "Hola");
     std::cout << std_tuple << std::endl;
+
+    std::cout<<"\nRange based tuple iterator"<<std::endl;
+    auto some = std::make_tuple("I am good", 255, 2.1);
+    for_each_in_tuple(some, [](const auto &x) { std::cout << x << std::endl; });
 }
