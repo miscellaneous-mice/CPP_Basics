@@ -70,7 +70,7 @@ constexpr typename std::enable_if<(N > 1) && (N <= 16), long double>::type IEEE7
 
     bitIndex = bitIndex + (m - 1);
     for(const auto& exp_0_5 : exp_range<m + 1>(1.0/2)) {
-        if (bitIndex == e) [[unlikely]] { break; }
+        if (bitIndex <= e) [[unlikely]] { break; }
         mantissa += (exp_0_5 * bitStream[bitIndex--]);
     }
 
