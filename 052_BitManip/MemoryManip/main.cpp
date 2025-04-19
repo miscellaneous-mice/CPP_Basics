@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <map>
 
-constexpr std::array<std::pair<std::size_t, std::size_t>, 129> IEEE754_BitMap() {
+constexpr std::array<std::pair<std::size_t, std::size_t>, 129> IEEE754_BitMap() noexcept {
     std::array<std::pair<std::size_t, std::size_t>, 129> map{};
     map[8]   = {0, 0};
     map[16]  = {5, 10};
@@ -15,18 +15,18 @@ constexpr std::array<std::pair<std::size_t, std::size_t>, 129> IEEE754_BitMap() 
 }
 
 template<std::size_t... I>
-constexpr auto make_exp_range(double exp, std::index_sequence<I...>) {
+[[nodiscard]] constexpr auto make_exp_range(double exp, std::index_sequence<I...>) {
     constexpr size_t range_size = sizeof...(I);
     return std::array<double, range_size>{std::pow(exp, ((range_size - 1) - I))...};
 }
 
 template<std::size_t N>
-constexpr auto exp_range(double exp) {
+[[nodiscard]] constexpr auto exp_range(double exp) {
     return make_exp_range(exp, std::make_index_sequence<N>{});
 }
 
 template<typename T>
-[[nodiscard]] constexpr auto ByteArray(T value) {
+constexpr auto ByteArray(T value) {
     std::array<std::bitset<8>, sizeof(T)> bytearray;
     for (size_t i = 0; i < sizeof(T); i++) {
         bytearray[i] = std::bitset<8>(*((unsigned char*)&value + i));
@@ -39,13 +39,14 @@ constexpr typename std::enable_if<(N > 1) && (N <= 16), long double>::type IEEE7
     constexpr std::array<std::pair<std::size_t, std::size_t>, 129> exp_man_bit_map = IEEE754_BitMap();
     double exponent = 0, mantissa = 1;
     long double result;
-    if constexpr (std::endian::native == std::endian::little)
+    if constexpr (std::endian::native == std::endian::little) {
         for (size_t i = 0; i < (int)(N / 2); i++) {
             byteArray[i] = byteArray[i] ^ byteArray[(N - 1) - i];
             byteArray[(N - 1) - i] = byteArray[i] ^ byteArray[(N - 1) - i];
             byteArray[i] = byteArray[i] ^ byteArray[(N - 1) - i];
             // std::swap(bytearray[i], bytearray[N - 1 - i]);
         }
+    }
     
     std::array<bool, N * 8> bitStream; // N bytes, 8 bits per byte
     size_t bitIndex = 0;
@@ -69,8 +70,7 @@ constexpr typename std::enable_if<(N > 1) && (N <= 16), long double>::type IEEE7
 
     bitIndex = bitIndex + (m - 1);
     for(const auto& exp_0_5 : exp_range<m + 1>(1.0/2)) {
-        if (bitIndex == e)
-            break;
+        if (bitIndex == e) [[unlikely]] { break; }
         mantissa += (exp_0_5 * bitStream[bitIndex--]);
     }
 
