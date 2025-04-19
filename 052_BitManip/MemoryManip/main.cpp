@@ -139,7 +139,7 @@ int main() {
         std::cout<<IEEE754(bytes)<<std::endl;
     }
     {
-        double value = 45.534879324;
+        float value = 45.534879324f;
         auto bytes = ByteArray(value);
         std::cout<<IEEE754(bytes)<<std::endl;
     }
