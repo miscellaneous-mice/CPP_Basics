@@ -1,7 +1,7 @@
 #include <iostream>
 
 #define getoffset(s, a) ((size_t)&(((s*)0)->a))
-#define getvalue(ptr, st, val) (*(decltype(st::val)*)((char*)ptr + getoffset(st, val)))
+#define getvalue(ptr, st, val) (*(decltype(st::val)*)((uint8_t*)ptr + getoffset(st, val)))
 
 struct GameState {
     int level;

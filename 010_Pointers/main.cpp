@@ -41,7 +41,7 @@ int main()
 
 	Log("\nEndianess");
 	unsigned int i = 1;
-	char *c = (char*)&i;
+	uint8_t *c = (uint8_t*)&i;
 	if (*c)
 		Log("Little endian");
 	else

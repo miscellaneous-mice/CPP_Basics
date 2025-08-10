@@ -11,7 +11,7 @@ Virtual functions are used when using polymorphism for classes
 class Entity
 {
 public:
-    static std::string message;
+    inline static std::string message;
     virtual std::string GetName(){return "Your dad";}
     void whisper() {std::cout<<".."<<message<<".."<<std::endl;}
 };
@@ -29,7 +29,7 @@ void PrintName(Entity* entity){
     std::cout<<entity->GetName()<<std::endl;
 }
 
-std::string Entity::message;
+// std::string Entity::message;
 
 void Speak(Player* player, std::string message, std::string tone){
     player->message = message;
@@ -52,6 +52,6 @@ int main(){
     PrintName(e);
     PrintName(p);
     Speak(p, "Hello there", "whisper");
-    Speak(p, "Hello there", "shout");
+    Speak(p, "Hey there", "shout");
     return 0;
 }

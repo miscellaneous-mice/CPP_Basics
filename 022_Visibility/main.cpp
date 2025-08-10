@@ -10,7 +10,7 @@ public:
     };
 private:
     std::string m_name;
-    static int m_speed;
+    inline static int m_speed;
     friend struct PrivateAccessor;
 protected:
     friend struct ProtectedAccessor;
@@ -30,7 +30,7 @@ public:
     ~Base() = default;
 };
 
-int Base::m_speed;
+// int Base::m_speed;
 
 class Entity : protected Base {
 public:
@@ -49,8 +49,8 @@ struct PrivateAccessor {
 private:
     PrivateAccessor() = default;
 public:
-    static int get_speed(std::shared_ptr<Base> base) {
-        return base->m_speed;
+    static int get_speed() {
+        return Base::m_speed;
     }
     static std::string get_name(std::shared_ptr<Base> base) {
         return base->m_name;
@@ -72,11 +72,11 @@ public:
 
 class EntityInfo : public Entity{
 public:
-    EntityInfo() : Entity("Info") {};
+    EntityInfo(std::string name) : Entity(name) {};
     void entity_speed(std::unique_ptr<Base> base) {
-        std::shared_ptr<Base> base_shared = std::make_shared<Base>(std::move(base));
-        std::cout<<"Speed via PrivateAccessor : "<<PrivateAccessor::get_speed(base_shared)<<std::endl;
-        std::cout<<"Speed via ProtectedAccessor : "<<ProtectedAccessor::get_speed(base_shared)<<std::endl;
+        // std::shared_ptr<Base> base_shared = std::make_shared<Base>(std::move(base));
+        std::cout<<"Speed via PrivateAccessor : "<<PrivateAccessor::get_speed()<<std::endl;
+        // std::cout<<"Speed via ProtectedAccessor : "<<ProtectedAccessor::get_speed(base_shared)<<std::endl;
     }
     void get_current_loc() {
         std::cout<<this->m_name<<" is at "<<"x : "<<this->x<<", y : "<<y<<std::endl;
@@ -85,13 +85,13 @@ public:
 
 int main() {
     std::unique_ptr<Entity> e = std::make_unique<Entity>("John");
-    std::unique_ptr<Entity> e_info = std::make_unique<EntityInfo>();
+    std::unique_ptr<Entity> e_info = std::make_unique<EntityInfo>("Nog");
     e->Info();
     e_info->Info();
 
     Base::set_speed(10);
     // e_info->set_speed(10);
 
-    // e_info->entity_speed(std::move(e));
+    e_info->entity_speed(std::move(e));
     return 0;
 }

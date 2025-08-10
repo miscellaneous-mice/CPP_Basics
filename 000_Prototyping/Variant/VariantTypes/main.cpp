@@ -2,6 +2,20 @@
 #include <variant>
 #include <vector>
 #include <typeindex>
+#include <string>
+
+using Arg = std::variant<int, double, std::string>;
+
+void get_type(const Arg& arg) {
+    if (std::holds_alternative<int>(arg))
+      std::cout<<"int type"<<std::endl;
+    else if (std::holds_alternative<double>(arg))
+      std::cout<<"double type"<<std::endl;
+    else if (std::holds_alternative<std::string>(arg))
+      std::cout<<"string type"<<std::endl;
+    else
+      std::cout<<"Unknown type"<<std::endl;
+}
 
 void func(int i) {
   std::cout << "Called func(int): " << i << std::endl;
@@ -67,6 +81,16 @@ int main() {
     std::cout<<"The value is : "<<arg<<", Type is : "<< typeid(arg).name() << std::endl;
     print((var_type&&)arg);
   }, variant_val);
+  
+  auto get_types = [](auto&&... args) mutable {
+    ((get_type(args)), ...);
+  };
 
+  get_types(
+    12342,
+    234578.344,
+    std::string("x01"),
+    std::string("dsfkj3242k3l")
+  );
   return 0;
 }

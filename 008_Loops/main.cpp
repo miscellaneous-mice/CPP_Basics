@@ -30,8 +30,7 @@ int main()
 	for ( ; condition ; ) {
 		Log("hello world");
 		i = i + 0.1;
-		if (!(i < 0.5))
-			condition = false;
+		condition = (i < 0.5);
 	}
 
 	while (condition) {

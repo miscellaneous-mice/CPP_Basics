@@ -11,7 +11,13 @@
                 "-g",
                 "${fileDirname}/*.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-I",
+                "/opt/homebrew/opt/openssl@3/include",
+                "-L",
+                "/opt/homebrew/opt/openssl@3/lib",
+                "-lssl",
+                "-lcrypto"
             ],
             "options": {
                 "cwd": "${fileDirname}"

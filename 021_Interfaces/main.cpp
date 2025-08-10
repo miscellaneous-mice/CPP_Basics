@@ -43,7 +43,7 @@ int main(){
     // Printable* print = new Printable(); // The classes with interfaces cannot be instanciated
     Entity* e = new Entity();
     Player* p = new Player();
-    Entity* pV = new Player();
+    Entity* pV = new Player(); // Assigning an entity pointer which points to a Player object
     GetInfo(e);
     GetInfo(p);
     GetInfo(pV);
@@ -58,3 +58,7 @@ int main(){
     delete pV;
     return 0;
 }
+
+/*
+Key feature of polymorphism in C++ allows the program to call the most derived version of a virtual function
+*/
