@@ -79,7 +79,9 @@
         "ranges": "cpp",
         "future": "cpp",
         "condition_variable": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "format": "cpp",
+        "__assert": "cpp"
     },
     "code-runner.executorMap": {
         "cpp": "cd $dir && clang++ -std=c++20 -stdlib=libc++ -fdiagnostics-color=always -g $dir/*.cpp -o $fileNameWithoutExt && ./$fileNameWithoutExt"
