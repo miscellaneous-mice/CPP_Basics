@@ -12,3 +12,4 @@ CmakeCache.txt
 *.o
 *.i
 *.bc
+build/
