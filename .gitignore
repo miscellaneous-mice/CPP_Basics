@@ -1,6 +1,7 @@
 *.dSYM/
 *.log
 logs/
+exec/
 main
 *.so
 notes/

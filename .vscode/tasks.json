@@ -26,7 +26,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${fileDirname}/${fileBasename}",
-                "-o", "${fileDirname}/${fileBasenameNoExtension}",
+                "-o", "${fileDirname}/exec/${fileBasenameNoExtension}",
                 "-L${fileDirname}",
                 "-l${fileBasenameNoExtension}libraries",
                 "-I", "${fileDirname}/libs",

@@ -81,7 +81,8 @@
         "condition_variable": "cpp",
         "thread": "cpp",
         "format": "cpp",
-        "__assert": "cpp"
+        "__assert": "cpp",
+        "stdio.h": "c"
     },
     "code-runner.executorMap": {
         "cpp": "cd $dir && clang++ -std=c++20 -stdlib=libc++ -fdiagnostics-color=always -g $dir/*.cpp -o $fileNameWithoutExt && ./$fileNameWithoutExt"
