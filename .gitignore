@@ -10,3 +10,5 @@ CmakeCache.txt
 *.cmake
 *.s
 *.o
+*.i
+*.bc
