@@ -8,3 +8,5 @@ CmakeFiles/
 Makefile
 CmakeCache.txt
 *.cmake
+*.s
+*.o
