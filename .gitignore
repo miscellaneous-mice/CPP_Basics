@@ -3,3 +3,8 @@
 logs/
 main
 *.so
+notes/
+CmakeFiles/
+Makefile
+CmakeCache.txt
+*.cmake
