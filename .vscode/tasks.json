@@ -4,26 +4,17 @@
         {
             "type": "shell",
             "label": "C/C++: build libraries",
-            "command": "clang++",
+            "command": "sh",
             "args": [
-                "-std=c++20",
-                "-stdlib=libc++",
-                "-fPIC",
-                "-shared",
-                "${fileDirname}/libs/*.cpp",
-                "-o",
-                "${fileDirname}/lib${fileBasenameNoExtension}libraries.so",
-                "-I", "/opt/homebrew/opt/openssl@3/include",
-                "-L", "/opt/homebrew/opt/openssl@3/lib",
-                "-lssl",
-                "-lcrypto"
+                "-c",
+                "clang++ -std=c++20 -stdlib=libc++ -fPIC -shared $(find ${fileDirname} -name \"*.cpp\" ! -name \"${fileBasename}\") -o ${fileDirname}/lib${fileBasenameNoExtension}libraries.so -I ${fileDirname}/libs -I /opt/homebrew/opt/openssl@3/include -L /opt/homebrew/opt/openssl@3/lib -lssl -lcrypto"
             ],
             "options": {
                 "cwd": "${fileDirname}"
             },
             "problemMatcher": ["$gcc"],
             "group": "build",
-            "detail": "Build shared library from libs/"
+            "detail": "Build shared library from all cpp files except the one being executed"
         },
         {
             "type": "cppbuild",
@@ -38,7 +29,7 @@
                 "-o", "${fileDirname}/${fileBasenameNoExtension}",
                 "-L${fileDirname}",
                 "-l${fileBasenameNoExtension}libraries",
-                "-I", "${fileDirname}/libs",   
+                "-I", "${fileDirname}/libs",
                 "-I", "/opt/homebrew/opt/openssl@3/include",
                 "-L", "/opt/homebrew/opt/openssl@3/lib",
                 "-lssl",
