@@ -38,6 +38,7 @@
                 "-o", "${fileDirname}/${fileBasenameNoExtension}",
                 "-L${fileDirname}",
                 "-l${fileBasenameNoExtension}libraries",
+                "-I", "${fileDirname}/libs",   
                 "-I", "/opt/homebrew/opt/openssl@3/include",
                 "-L", "/opt/homebrew/opt/openssl@3/lib",
                 "-lssl",
