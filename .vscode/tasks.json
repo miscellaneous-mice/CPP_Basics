@@ -7,7 +7,7 @@
             "command": "sh",
             "args": [
                 "-c",
-                "clang++ -std=c++20 -stdlib=libc++ -fPIC -shared $(find ${fileDirname} -name \"*.cpp\" ! -name \"${fileBasename}\") -o ${fileDirname}/lib${fileBasenameNoExtension}libraries.so -I ${fileDirname}/libs -I /opt/homebrew/opt/openssl@3/include -L /opt/homebrew/opt/openssl@3/lib -lssl -lcrypto"
+                "clang++ -std=c++20 -stdlib=libc++ -fPIC -shared $(find ${fileDirname} -name \"*.cpp\" ! -name \"${fileBasename}\" -print0 | xargs -0) -o ${fileDirname}/lib${fileBasenameNoExtension}libraries.so -I ${fileDirname}/libs -I /opt/homebrew/opt/openssl@3/include -L /opt/homebrew/opt/openssl@3/lib -lssl -lcrypto"
             ],
             "options": {
                 "cwd": "${fileDirname}"
