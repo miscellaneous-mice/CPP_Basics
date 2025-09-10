@@ -15,7 +15,8 @@ void increment_ref(int& value) {
 
 int main() {
 	// Intro----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	int a;
+	int a = 2;
+	std::cout << a << std::endl;
 
 	// & is acutally part of the type, not a reference, not address of another variable, it's just part of type.
 	int& ref = a; // Here only variable is just a, there are no 2 variables (a, ref) created here. We've just created an alias for a.
@@ -47,7 +48,7 @@ int main() {
 	//int& ref_d;  We can't do this because it's just a reference to a variable, it's not an actaul variable. Hence when reference is create it should be immediately assign to something.
 	int& ref_d = a;
 	ref_d = b; // Throws an error as it can be used to reference only one variable. A reference, can't act as alias for a as well as b. Alias is just an assumed variable.
-	std::cout << a << std::endl; // We just endup with assigning value of b to a. Hence a is 2
+	std::cout << a <<" " << b << std::endl; // We just endup with assigning value of b to a. Hence a is 2
 
 	// Instead of using references we can use pointer's change what memory address pointer is pointing to.
 	int* ptr = &a;

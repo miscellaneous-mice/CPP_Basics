@@ -53,7 +53,7 @@ struct LLIterator {
     }
 
     bool operator==(const LLIterator& other) const {
-        return m_Node == other.m_Node;
+        return m_Node == other.m_Node; // Just checks if the nodes have the same memory addresses (0x023487832 == 0x023487832)
     }
 
     bool operator!=(const LLIterator& other) const {

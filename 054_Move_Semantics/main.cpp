@@ -112,51 +112,33 @@ private:
     SStream string;
 };
 
+void iter_sstream(std::unique_ptr<SStream>&& sstream) {
+    std::cout<<"Moved the class instance"<<std::endl;
+    for (auto s : *sstream) {
+        std::cout << s << ", ";
+    } 
+    std::cout<<std::endl;
+}
+
+void iter_sstream(const SStream& sstream) {
+    std::cout<<"Copied the class instance"<<std::endl;
+    for (auto s : sstream) {
+        std::cout << s << ", ";
+    } 
+    std::cout<<std::endl;
+}
+
 int main() {
-    SStream* strng = new SStream("Hola, Mucho Gusto");
-
-    for (auto s : *strng) {
-        std::cout << s << ", ";
-    }
-    
-    std::cout<<std::endl;
-    
-    SStream* strng2 = std::move(strng); // This is just a raw pointer hence does not move
-    for (auto s : *strng2) {
-        std::cout << s << ", ";
-    }    
-
-    std::cout<<std::endl;
-
-    SStream strng4 = "Buenos dias";
-
-    for (auto s : strng4) {
-        std::cout << s << ", ";
-    }
-    
-    std::cout<<std::endl;
-    
-    SStream strng5 = std::move(strng4);
-    for (auto s : strng5) {
-        std::cout << s << ", ";
-    }    
-
-    std::cout<<std::endl;
-
-    std::cout<<(SStream&&)strng5<<std::endl;
-    std::cout<<std::move(strng5)<<std::endl;
-    
-    Entity e("Viglaw");
-    e.PrintName();
-
-    std::array<SStream, 5> strs = {"Joe", "Jim", "Ellen", "Victor", "Susanne"};
-    for (auto& s : strs) {
-        std::cout<<s<<std::endl;
+    std::cout<<"Move semantics"<<std::endl;
+    {
+        std::unique_ptr<SStream> strng_uniq_ptr = std::make_unique<SStream>("Move Smart Pointers");
+        auto new_owner = std::move(strng_uniq_ptr);
+        iter_sstream(std::move(new_owner));
+        // std::cout << *strng_uniq_ptr->begin() << std::endl; // Will cause issue
     }
 
-    SStream ss_val;
-    ss_val<<"Just Overloading some";
-    ss_val<<", What is that! ";
-    ss_val<<std::move(strng5);
-    std::cout<<ss_val<<std::endl;
+    {
+        std::unique_ptr<SStream> strng_uniq_ptr = std::make_unique<SStream>("Copy Smart Pointers");
+        iter_sstream(*strng_uniq_ptr.get());
+    }
 }

@@ -33,32 +33,32 @@ void Print(T arr) {
 
 constexpr std::array<const char*, 256> morsemapping() {
     std::array<const char*, 256> morse = {};
-    morse['A'] = "._";
-    morse['B'] = "_...";
-    morse['C'] = "_._.";
-    morse['D'] = "_..";
-    morse['E'] = ".";
-    morse['F'] = ".._.";
-    morse['G'] = "__.";
-    morse['H'] = "....";
-    morse['I'] = "..";
-    morse['J'] = ".___";
-    morse['K'] = "_._";
-    morse['L'] = "._..";
-    morse['M'] = "__";
-    morse['N'] = "_.";
-    morse['O'] = "___";
-    morse['P'] = ".__.";
-    morse['Q'] = "__._";
-    morse['R'] = "._.";
-    morse['S'] = "...";
-    morse['T'] = "_";
-    morse['U'] = ".._";
-    morse['V'] = "..._";
-    morse['W'] = ".__";
-    morse['X'] = "_.._";
-    morse['Y'] = "_.__";
-    morse['Z'] = "__..";
+    morse['A'] = morse['a'] = "._";
+    morse['B'] = morse['b'] = "_...";
+    morse['C'] = morse['c'] = "_._.";
+    morse['D'] = morse['d'] = "_..";
+    morse['E'] = morse['e'] = ".";
+    morse['F'] = morse['f'] = ".._.";
+    morse['G'] = morse['g'] = "__.";
+    morse['H'] = morse['h'] = "....";
+    morse['I'] = morse['i'] = "..";
+    morse['J'] = morse['j'] = ".___";
+    morse['K'] = morse['k'] = "_._";
+    morse['L'] = morse['l'] = "._..";
+    morse['M'] = morse['m'] = "__";
+    morse['N'] = morse['n'] = "_.";
+    morse['O'] = morse['o'] = "___";
+    morse['P'] = morse['p'] = ".__.";
+    morse['Q'] = morse['q'] = "__._";
+    morse['R'] = morse['r'] = "._.";
+    morse['S'] = morse['s'] = "...";
+    morse['T'] = morse['t'] = "_";
+    morse['U'] = morse['u'] = ".._";
+    morse['V'] = morse['v'] = "..._";
+    morse['W'] = morse['w'] = ".__";
+    morse['X'] = morse['x'] = "_.._";
+    morse['Y'] = morse['y'] = "_.__";
+    morse['Z'] = morse['z'] = "__..";
     morse['0'] = "_____";
     morse['1'] = ".____";
     morse['2'] = "..___";
@@ -84,6 +84,12 @@ struct Foo {
         const char* operator[](size_t index) const { return MorseCode::morsecode[index]; }
     };
 }; typedef Foo::MorseCode Morse;
+
+typedef struct {
+    int tx_pin;
+    int rx_pin;
+    int baud_rate;
+} uart_config_t;
 
 
 int main() {
@@ -122,4 +128,11 @@ int main() {
     intplane5 plane1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     plane5<float> plane2 = {1.0f, 2.2f, 3.40f, 4.23f, 5.043f, 6.324f, 7.324f, 8.893f, 9.384f, 10.347f};
     intplane<7> plane3 = {1, 2, 3, 4, 5, 6, 7};
+
+    const uart_config_t my_uart = {
+        .tx_pin = 17,
+        .rx_pin = 16,
+        .baud_rate = 115200
+    };
+    std::cout<<my_uart.baud_rate<<std::endl;
 }

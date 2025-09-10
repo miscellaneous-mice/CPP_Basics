@@ -100,10 +100,12 @@ int main() {
     f4();
     std::cout<<x<<std::endl;
 
-    std::cout<<"\nArrow operator"<<std::endl;
-    Entity* e3 = new Entity();
-    ScopedPtr s(e3);
-    s->getName();
+    {
+        std::cout<<"\nArrow operator"<<std::endl;
+        Entity* e3 = new Entity(5);
+        ScopedPtr s(e3);
+        s->getName();
+    }
 
     std::cout<<"\nGetting common types"<<std::endl;
     A a;

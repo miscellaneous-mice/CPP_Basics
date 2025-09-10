@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cmath>
+#include <type_traits>
+#include <typeindex>
 
 struct Player_Public // We are creating a new variable "type". It doesn't have a type. It is a type.
 {
@@ -45,10 +47,23 @@ public:
 	}
 };
 
+template <typename T>
+std::type_index print_type() {
+    std::cout << __PRETTY_FUNCTION__ << "\n"; // Compiler-specific
+	if constexpr (std::is_class<T>::value) { std::cout<<"It's class/struct"<<std::endl; }
+	else { std::cout<<"It's not class/struct"<<std::endl; }
+	return std::type_index(typeid(T));
+}
+
 int main() {
 
 
 	Player_Public player1; // we create a variable player of type Player_private which is a class. We can access all the elements of the struct from Player_public objects by default
+	Player_Private player2; // we create a variable player of type Player_private which is a class. We can't access all the elements of the class using Player_private objects by default
+
+    std::cout << print_type<decltype(player1)>().name() <<std::endl;
+	std::cout << print_type<decltype(player2)>().name() <<std::endl;
+
 	player1.x = 0;
 	player1.y = 0;
 	player1.speed = 10;
@@ -58,7 +73,6 @@ int main() {
 	std::cout << "Player Object is struct" << std::endl;
 	std::cout << "x coordinate : " << player1.x << "\ny coordinate : " << player1.y << std::endl;
 
-	Player_Private player2; // we create a variable player of type Player_private which is a class. We can't access all the elements of the class using Player_private objects by default
 	player2.x = 0;
 	player2.y = 0;
 	player2.speed = 10;

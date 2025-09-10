@@ -21,10 +21,11 @@ void Move_by_ref(Player& player, int xa, int ya) { // Pass by reference
 
 }
 
-void Move_by_value(Player player, int xa, int ya) { // Pass by value
+Player Move_by_value(Player player, int xa, int ya) { // Pass by value
 
 	player.x += xa * player.speed;
 	player.y += ya * player.speed;
+	return player;
 
 }
 
@@ -37,7 +38,7 @@ int main() {
 
 	std::cout << "Initial x coordinate : " << player.x << "\nInitial y coordinate : " << player.y << std::endl;
 
-	Move_by_value(player, 2, 5);
+	player = Move_by_value(player, 2, 5);
 	std::cout << "Passing player object by value" << std::endl;
 	std::cout << "x coordinate : " << player.x << "\ny coordinate : " << player.y << std::endl;
 
