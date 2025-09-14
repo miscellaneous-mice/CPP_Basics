@@ -7,7 +7,7 @@ struct CDistLib {
     void (*uniform_dist)(float, float);
 };
 
-typedef struct CPPDistLib {
+typedef struct {
     void (*normal_dist)(double, double);
     void (*uniform_dist)(float, float);
     void (*poisson_dist)(int);
