@@ -27,5 +27,9 @@ int main() {
 mdkir build && cd build
 cmake ../
 make
-./exec/main
+./exec/hashing_exec
+
+
+Now you can delete `056_Build_Systems/CMake/04_CustomLibs/build/lib/libmylib.a` and run `./exec/hashing_exec` it will work as libmylib.a is a static library
+But when you delete `056_Build_Systems/CMake/04_CustomLibs/build/customlib/libsstreamlib.dylib` and run `./exec/hashing_exec` it will not work as it is a shared/dynamic library
 */

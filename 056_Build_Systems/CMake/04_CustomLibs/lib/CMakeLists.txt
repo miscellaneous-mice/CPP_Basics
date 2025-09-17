@@ -1,5 +1,7 @@
 # Collect sources
 file(GLOB_RECURSE LIB_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+
+# Build a static library (creates libmylib.a)
 add_library(mylib STATIC ${LIB_FILES})
 
 # Add your project includes
