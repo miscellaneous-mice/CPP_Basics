@@ -143,6 +143,10 @@ int main() {
 	std::cout<<getvalue(ptr, GameState, health)<<std::endl;
 	std::cout<<getvalue(ptr, GameState, score)<<std::endl;
 	std::cout<<getvalue(ptr, GameState, game_completed)<<std::endl;
+
+	char *words[10] = {"apple", "banana", "cherry", "dragon"};
+	char **var = words;  // var points to the array
+	std::cout<<var[1]<<", "<<var[2]<<std::endl;
 }
 
 /*
